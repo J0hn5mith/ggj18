@@ -1,7 +1,7 @@
 var canvas;
 var c;
 
-var demo;
+var simulation;
 
 
 jQuery(document).ready(function() {

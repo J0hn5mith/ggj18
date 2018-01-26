@@ -35,6 +35,7 @@ Game.start = function() {
 
     Keyboard.allowKey(Keyboard.F5);
     Keyboard.allowKey(Keyboard.F12);
+    Keyboard.allowKey(Keyboard.R);
     Keyboard.registerKeyUpHandler(Keyboard.F11, function() {
         Game.toggleFullScreen();
     });

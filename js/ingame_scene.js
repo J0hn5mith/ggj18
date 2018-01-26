@@ -5,6 +5,8 @@ function IngameScene() {}
 IngameScene.show = function() {
 
     // do stuff before we update and draw this scene for the first time
+    simulation = new Simulation();
+    simulation.show()
 };
 
 
@@ -25,6 +27,7 @@ IngameScene.update = function() {
     // update stuff here
 
     if(!Game.paused) {
+        simulation.update(Timer.delta)
 
         // update stuff except when paused
     }
@@ -34,10 +37,11 @@ IngameScene.update = function() {
 IngameScene.draw = function() {
 
     // clear scene
-    c.fillStyle = "#fff";
+    c.fillStyle = "#005";
     c.fillRect(0, 0, Game.width, Game.height);
 
     // draw stuff here
+    simulation.draw()
 
     // draw pause screen when paused
     if(Game.paused) {
