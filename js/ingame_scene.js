@@ -6,8 +6,6 @@ IngameScene.levelCounter = 0;
 IngameScene.levelCounter = 0;
 IngameScene._loadLevels = function() {
 
-    space = new Space();
-
     collisionHandler = () => IngameScene.restartLevel();
     const co1 = new CelestialObject(1000, 500, 50, new Vec2(0,0), '#ff1f00');
     oo1 = new OrbitingObject(co1, 20, 100, 3, '#11ff01', collisionHandler);
@@ -63,7 +61,7 @@ IngameScene.restartLevel = function() {
 IngameScene.nextLevel = function() {
     IngameScene.levelCounter++;
     IngameScene.restartLevel();
-}
+};
 
 IngameScene.hide = function() {
 

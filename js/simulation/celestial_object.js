@@ -5,21 +5,15 @@ function CelestialObject(x, y, r, v, color) {
     this.color = color;
     this.mass = 300;
     this.orbitingObjects = [];
-
-    space.addBlackHole(this.pos, this.r);
 }
 
-CelestialObject.prototype.update = function(delta) {
-    _.each(this.orbitingObjects, (oo) => {
-        oo.update(delta);
-    });
-}
 
 CelestialObject.prototype.update = function(delta) {
     _.each(this.orbitingObjects, (oo) => {
         oo.update(delta);
     });
 };
+
 
 CelestialObject.prototype.draw = function(delta) {
     c.fillStyle = this.color;
@@ -28,4 +22,4 @@ CelestialObject.prototype.draw = function(delta) {
     _.each(this.orbitingObjects, (oo) => {
         oo.draw();
     });
-}
+};
