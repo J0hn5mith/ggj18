@@ -5,7 +5,6 @@ IngameScene.lifes = 3;
 IngameScene.levelCounter = 0;
 IngameScene.levelCounter = 0;
 IngameScene._loadLevels = function() {
-    IngameScene.hud =  new HUD();
 
     space = new Space();
 
@@ -42,21 +41,24 @@ IngameScene._loadLevels = function() {
         new Level(new Vec2(200, 100), [co2], target),
         new Level(new Vec2(100, 500), [co3, co4], target),
     ];
-}
+};
 
 IngameScene.show = function() {
 
     // do stuff before we update and draw this scene for the first time
     IngameScene._loadLevels();
+    IngameScene.hud =  new HUD();
+    IngameScene.hud.show();
 
     IngameScene.restartLevel()
 };
 
 IngameScene.restartLevel = function() {
+    //space = new Space();
     IngameScene.currentLevel = IngameScene.levels[IngameScene.levelCounter]
     simulation = new Simulation(IngameScene.currentLevel);
     simulation.show()
-}
+};
 
 IngameScene.nextLevel = function() {
     IngameScene.levelCounter++;
@@ -81,7 +83,6 @@ IngameScene.update = function() {
 
     if(!Game.paused) {
         simulation.update(Timer.delta)
-
         // update stuff except when paused
     }
 };
@@ -96,6 +97,7 @@ IngameScene.draw = function() {
     // draw stuff here
     space.draw();
     simulation.draw()
+    IngameScene.hud.draw();
 
     // draw pause screen when paused
     if(Game.paused) {
