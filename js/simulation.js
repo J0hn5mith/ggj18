@@ -15,14 +15,16 @@ function OrbitingObject(co, x, y, r, v, color) {
     this.v = v;
     this.color = color;
     this.mass = 300;
+    this.orbitAngle = 0.5;
+    this.orbitingSpeed = 5;
 }
 
-function SpaceShip(x, y, r, v, color) {
-    this.pos = new Vec2(x,y);
-    this.r = r;
-    this.v = v;
-    this.color = color;
-    this.mass = 300;
+OrbitingObject.prototype.update = function(delta) {
+    this.orbitAngle += this.orbitingSpeed * delta;
+    // TODO test for overflow
+    var orbit = new Vec2(300, 0);
+    orbit = orbit.rotate(this.orbitAngle);
+    this.pos = this.co.pos.add(orbit);
 }
 
 function Target(x, y, r, v, color, collision_handler) {
@@ -36,7 +38,7 @@ function Target(x, y, r, v, color, collision_handler) {
 
 
 function Simulation() {
-    this.ship = new SpaceShip(100, 500, 20, new Vec2(100, 100), '#11ff01');
+    this.ship = new SpaceShip(100, 500, 20, new Vec2(000, 000), '#11ff01');
     this.target = new Target(1500, 500, 20, new Vec2(000, 0), '#11f001', (ship) => {
         console.log("You Win!");
     });
@@ -44,6 +46,8 @@ function Simulation() {
         //new CelestialObject(500, 800, 50, 00, '#ffff01'),
         new CelestialObject(1000, 500, 50, new Vec2(0,0), '#ff1f00'),
     ];
+    this.oo = new OrbitingObject(this.co[0], 100, 500, 20, new Vec2(000, 000), '#11ff01');
+    this.oo = new OrbitingObject(this.co[0], 100, 400, 20, new Vec2(000, 000), '#11ff01');
 
 this.gravity = false;
 this.antiGravity = false;
@@ -92,6 +96,7 @@ Simulation.prototype.update = function(delta) {
     });
     this.ship.pos = this.ship.pos.add(this.ship.v.multiply(delta));
     this._update_collision(delta);
+    this.oo.update(delta);
 };
 
 Simulation.prototype._draw_co = function(co) {
@@ -101,16 +106,15 @@ Simulation.prototype._draw_co = function(co) {
 }
 
 Simulation.prototype.draw = function() {
-    this._draw_co(this.ship);
+    this.ship.draw();
     this._draw_co(this.target);
+    this._draw_co(this.oo);
     _.each(this.co, (co) => {
         this._draw_co(co);
     });
-
 }
 
 Simulation.prototype._register_keys = function() {
-
     Keyboard.registerKeyUpHandler(Keyboard.G, () => {
         console.log('up');
         this.gravity = false;
