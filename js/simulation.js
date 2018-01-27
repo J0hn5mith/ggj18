@@ -1,5 +1,4 @@
-const F = 0.6674;
-
+const F = 0.6674 * 2; 
 function Colors(){};
 Colors.GREEN_DARK = '#004845  ';
 Colors.GREEN_LIGHT = '#0f6f60';
@@ -30,21 +29,21 @@ function HomePlanet(pos, r) {
 
 HomePlanet.prototype._drawMarker = function(delta) {
     c.fillStyle = this.markerColor;
-
     rotation = (Utils.angle(this.pos.x, this.pos.y, Mouse.pos.x, Mouse.pos.y)+1.9)/Math.PI;
     Utils.drawRing(c, this.pos.x, this.pos.y, this.r + 17, this.r + 10, 0.2, rotation);
     c.fill();
 }
 
-HomePlanet.prototype._drawAimArrow = function(delta) {
-    limmitLength = function(start, end, maxLength) {
-        delta = end.subtract(start)
-        originalLength = delta.norm()
-        length = Utils.limit(originalLength, this.radius + 10, maxLength)
-        return start.add(delta.normalize().multiply(length));
-    }
 
-    lineEnd = limmitLength(this.pos, Mouse.pos, 250);
+limitDistanceLength = function(start, end, maxLength) {
+    delta = end.subtract(start)
+    originalLength = delta.norm()
+    length = Utils.limit(originalLength, 0, maxLength)
+    return delta.normalize().multiply(length);
+}
+
+HomePlanet.prototype._drawAimArrow = function(delta) {
+    lineEnd = this.pos.add(limitDistanceLength(this.pos, Mouse.pos, 250));
     c.strokeStyle = this.markerColor;
     c.setLineDash([10, 10]);
     c.lineWidth = 5;
@@ -55,8 +54,10 @@ HomePlanet.prototype._drawAimArrow = function(delta) {
 }
 
 HomePlanet.prototype.draw = function(delta) {
+    c.globalAlpha=0.5;
     this._drawMarker();
     this._drawAimArrow();
+    c.globalAlpha=1;
     c.fillStyle = this.color;
     Utils.drawCircle(c, this.pos.x, this.pos.y, this.r);
     c.fill();
@@ -82,12 +83,22 @@ function Simulation(level) {
 
     this.gravity = false;
     this.antiGravity = false;
+    this.started = false;
 }
 
 Simulation.prototype.show = function() {
     this._register_keys();
 }
 
+Simulation.prototype._updateConstraints = function(delta) {
+    if (this.ship.pos.x < 0 || this.ship.pos.x > Settings.Size.MAX_WIDTH ||
+        this.ship.pos.y < 0 || this.ship.pos.y > Settings.Size.MAX_HEIGHT
+    ) {
+        console.log("The deep space has swallowed the ship");
+        IngameScene.restartLevel();
+    }
+
+}
 Simulation.prototype._update_gravity = function(delta) {
     total_ac = new Vec2(0,0);
     _.each(this.co, (co) => {
@@ -124,7 +135,8 @@ Simulation.prototype._update_collision = function(delta) {
 }
 
 Simulation.prototype.update = function(delta) {
-    if(this.gravity !== 0) {
+    this._updateConstraints(delta);
+    if(this.gravity !== 0 && this.started) {
         this._update_gravity(delta);
     }
     _.each(this.co, (co) => {
@@ -145,14 +157,11 @@ Simulation.prototype.draw = function() {
     this.ship.draw();
     this._draw_co(this.target);
     this.start.draw();
-    _.each(this.co, (co) => {
-        co.draw();
-    });
 }
 
 Simulation.prototype._accellerateShip = function() {
-    dir = Mouse.pos.subtract(this.ship.pos);
-    this.ship.v = dir;
+    dir = limitDistanceLength(this.start.pos, Mouse.pos, 300);
+    this.ship.v = dir.multiply(2);
 }
 
 Simulation.prototype._register_keys = function() {
@@ -162,6 +171,10 @@ Simulation.prototype._register_keys = function() {
     Keyboard.registerKeyUpHandler(Keyboard.H, () => this.gravity = 0);
 
     Mouse.left.registerUpCallback('shoot', () => {
-        this._accellerateShip()
+        if(!this.started) {
+            this.started = true;
+            this._accellerateShip()
+        }
+
     });
 }

@@ -9,7 +9,7 @@ function OrbitingObject(co, r, orbitingRadius, orbitingSpeed, color, collisionHa
     this.orbitingSpeed = orbitingSpeed;
     this.collisionHandler = collisionHandler;
 
-    this.drawable = space.addBlackHole(this.pos, this.r);
+    this.drawable = space.addSun(this.pos, this.r);
 }
 
 OrbitingObject.prototype.update = function(delta) {

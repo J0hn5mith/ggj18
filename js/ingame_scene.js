@@ -1,8 +1,11 @@
 function IngameScene() {}
 
 
-IngameScene.levelCounter = 2;
+IngameScene.lifes = 3;
+IngameScene.levelCounter = 0;
+IngameScene.levelCounter = 0;
 IngameScene._loadLevels = function() {
+    IngameScene.hud =  new HUD();
 
     space = new Space();
 
@@ -91,8 +94,8 @@ IngameScene.draw = function() {
     c.fillRect(0, 0, Game.width, Game.height);
 
     // draw stuff here
+    space.draw();
     simulation.draw()
-    //space.draw();
 
     // draw pause screen when paused
     if(Game.paused) {
