@@ -23,6 +23,7 @@ function Levels() {
     const co3 = new CelestialObject(800, 400, 50, new Vec2(0,0), Colors.YELLOW_LIGHT);
     const co4 = new CelestialObject(1000, 900, 50, new Vec2(0,0), Colors.YELLOW_LIGHT);
     oo1 = new OrbitingObject(co3, 20, 100, 3, Colors.YELLOW_DARK, collisionHandler);
+
     oo2 = new OrbitingObject(co3, 20, 200, -2, Colors.YELLOW_DARK, collisionHandler);
     oo3 = new OrbitingObject(co4, 20, 300, 2, Colors.YELLOW_DARK, collisionHandler);
     co3.orbitingObjects.push(oo1);
