@@ -2,6 +2,8 @@ var canvas;
 var c;
 
 var simulation;
+var space;
+
 
 
 jQuery(document).ready(function() {

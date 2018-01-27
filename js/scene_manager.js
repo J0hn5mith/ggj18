@@ -7,8 +7,7 @@ SceneManager.nextScene = null;
 
 SceneManager.init = function() {
     SceneManager.INITIAL_SCENE = LoadingScene;
-    SceneManager.SCENE_AFTER_LOADING = DemoMenuScene;
-    SceneManager.SCENE_AFTER_LOADING = IngameScene;;
+    SceneManager.SCENE_AFTER_LOADING = GraphicsTestScene;
 };
 
 
