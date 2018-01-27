@@ -1,30 +1,55 @@
 const F = 0.6674;
 
-function Target(x, y, r, v, color, collisionHandler) {
+function Colors(){};
+Colors.GREEN_DARK = '#004845  ';
+Colors.GREEN_LIGHT = '#0f6f60';
+Colors.RED_DARK = '#9f292f  ';
+Colors.RED_LIGHT = '#d6483f  ';
+Colors.PINK = '#fea58b';
+Colors.BLUE_DARK = '#002748';
+Colors.BLUE_LIGHT = '#0f4e6f';
+Colors.YELLOW_DARK = '#d6933f  ';
+Colors.YELLOW_LIGHT = '#fedf8b';
+Colors.BROWN_LIGHT = '#9f5e29  ';
+
+
+function TargetPlanet(x, y, r, v, collisionHandler) {
     this.pos = new Vec2(x,y);
     this.r = r;
     this.v = v;
-    this.color = color;
-    this.mass = 300;
+    this.color = Colors.RED_DARK;
     this.collisionHandler = collisionHandler;
 }
 
-function Level(celestialObjects){
+function HomePlanet(pos, r) {
+    this.pos = pos;
+    this.r = r;
+    this.color = Colors.GREEN_DARK;
+}
+
+HomePlanet.prototype.draw = function(delta) {
+    c.fillStyle = this.color;
+    Utils.drawCircle(c, this.pos.x, this.pos.y, this.r);
+    c.fill();
+}
+
+function Level(startPosition, celestialObjects, target){
+    this.startPosition = startPosition;
     this.celestialObjects = celestialObjects;
-    this.startPosition = new Vec2(100, 500);
+    this.target = target;
 }
 
 function Simulation(level) {
     this.ship = new SpaceShip(
         level.startPosition.x,
         level.startPosition.y,
-        50,
-        new Vec2(100, -100), '#11ff01'
+        45,
+        new Vec2(0, 0),
+        Colors.GREEN_LIGHT
+        
     );
-    this.target = new Target(1500, 500, 20, new Vec2(000, 0), '#11f001', (ship) => {
-        IngameScene.nextLevel();
-        console.log("You Win!");
-    });
+    this.start = new HomePlanet(level.startPosition, 50);
+    this.target = level.target;
     this.co = level.celestialObjects;
 
     this.gravity = false;
@@ -38,12 +63,11 @@ Simulation.prototype.show = function() {
 Simulation.prototype._update_gravity = function(delta) {
     total_ac = new Vec2(0,0);
     _.each(this.co, (co) => {
-        console.log('u grav');
         pos_delta = co.pos.subtract(this.ship.pos);
         distance = pos_delta.norm();
         direction = pos_delta.normalize();
         force = F * (co.mass * this.ship.mass)/distance;
-        total_ac = total_ac.add(direction.multiply(force));
+        total_ac = total_ac.add(direction.multiply(force * this.gravity));
     });
     this.ship.v = this.ship.v.add(total_ac.multiply(delta));
 }
@@ -72,7 +96,7 @@ Simulation.prototype._update_collision = function(delta) {
 }
 
 Simulation.prototype.update = function(delta) {
-    if(this.gravity) {
+    if(this.gravity !== 0) {
         this._update_gravity(delta);
     }
     _.each(this.co, (co) => {
@@ -92,17 +116,24 @@ Simulation.prototype._draw_co = function(co) {
 Simulation.prototype.draw = function() {
     this.ship.draw();
     this._draw_co(this.target);
+    this.start.draw();
     _.each(this.co, (co) => {
         co.draw();
     });
 }
 
-Simulation.prototype._register_keys = function() {
-    Keyboard.registerKeyUpHandler(Keyboard.G, () => {
-        this.gravity = false;
-    });
+Simulation.prototype._accellerateShip = function() {
+    dir = Mouse.pos.subtract(this.ship.pos);
+    this.ship.v = dir;
+}
 
-    Keyboard.registerKeyDownHandler(Keyboard.G, () => {
-        this.gravity = true;
+Simulation.prototype._register_keys = function() {
+    Keyboard.registerKeyDownHandler(Keyboard.G, () => this.gravity = 1);
+    Keyboard.registerKeyUpHandler(Keyboard.G, () => this.gravity = 0);
+    Keyboard.registerKeyDownHandler(Keyboard.H, () => this.gravity = -1);
+    Keyboard.registerKeyUpHandler(Keyboard.H, () => this.gravity = 0);
+
+    Mouse.left.registerUpCallback('shoot', () => {
+        this._accellerateShip()
     });
 }
