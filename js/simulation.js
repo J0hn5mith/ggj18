@@ -25,9 +25,38 @@ function HomePlanet(pos, r) {
     this.pos = pos;
     this.r = r;
     this.color = Colors.GREEN_DARK;
+    this.markerColor = Colors.GREEN_LIGHT;
+}
+
+HomePlanet.prototype._drawMarker = function(delta) {
+    c.fillStyle = this.markerColor;
+
+    rotation = (Utils.angle(this.pos.x, this.pos.y, Mouse.pos.x, Mouse.pos.y)+1.9)/Math.PI;
+    Utils.drawRing(c, this.pos.x, this.pos.y, this.r + 17, this.r + 10, 0.2, rotation);
+    c.fill();
+}
+
+HomePlanet.prototype._drawAimArrow = function(delta) {
+    limmitLength = function(start, end, maxLength) {
+        delta = end.subtract(start)
+        originalLength = delta.norm()
+        length = Utils.limit(originalLength, this.radius + 10, maxLength)
+        return start.add(delta.normalize().multiply(length));
+    }
+
+    lineEnd = limmitLength(this.pos, Mouse.pos, 250);
+    c.strokeStyle = this.markerColor;
+    c.setLineDash([10, 10]);
+    c.lineWidth = 5;
+    c.beginPath();
+    c.moveTo(this.pos.x, this.pos.y);
+    c.lineTo(lineEnd.x, lineEnd.y);
+    c.stroke();
 }
 
 HomePlanet.prototype.draw = function(delta) {
+    this._drawMarker();
+    this._drawAimArrow();
     c.fillStyle = this.color;
     Utils.drawCircle(c, this.pos.x, this.pos.y, this.r);
     c.fill();
@@ -46,7 +75,6 @@ function Simulation(level) {
         45,
         new Vec2(0, 0),
         Colors.GREEN_LIGHT
-        
     );
     this.start = new HomePlanet(level.startPosition, 50);
     this.target = level.target;
