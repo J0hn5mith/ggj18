@@ -42,8 +42,8 @@ Settings.Loading = function() {};
 
 Settings.Loading.SOUND_MANAGER_PERCENTAGE = 5;
 Settings.Loading.IMAGE_PERCENTAGE = 30;
-Settings.Loading.SOUND_PERCENTAGE = 10;
-Settings.Loading.PIXEL_FONT_PERCENTAGE = 5;
+Settings.Loading.SOUND_PERCENTAGE = 15;
+Settings.Loading.PIXEL_FONT_PERCENTAGE = 0;
 Settings.Loading.WEB_FONT_PERCENTAGE = 10;
 Settings.Loading.FAKE_PERCENTAGE = 40;
 
