@@ -1,16 +1,17 @@
-function OrbitingObject(co, r, orbitingRadius, orbitingSpeed, color, collisionHandler) {
+function OrbitingObject(co, r, orbitingRadius, orbitingSpeed, color, collisionHandler, offset) {
+    offset = offset || 0.5;
     this.co = co;
     this.pos = co.pos;
     this.r = r;
     this.color = color;
     this.mass = 300;
     this.orbitingRadius = orbitingRadius  || 300;
-    this.orbitAngle = 0.5;
+    this.orbitAngle = offset;
     this.orbitingSpeed = orbitingSpeed;
     this.collisionHandler = collisionHandler;
 
     this.drawable = null;
-}
+};
 
 
 OrbitingObject.prototype.initDrawable = function() {

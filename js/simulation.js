@@ -62,12 +62,6 @@ HomePlanet.prototype.draw = function() {
     c.fill();
 }
 
-function Level(startPosition, celestialObjects, target){
-    this.startPosition = startPosition;
-    this.celestialObjects = celestialObjects;
-    this.target = target;
-}
-
 function Simulation(level) {
     this.ship = new SpaceShip(
         level.startPosition.x,
@@ -132,7 +126,7 @@ Simulation.prototype._update_collision = function(delta) {
         });
     });
     if(collision) {
-        this.ship.v = this.ship.v.multiply(-1);
+        gameState.shipDestroyed();
     }
     if(this._test_collision(this.ship, this.target)) {
         this.target.collisionHandler(this.ship);
