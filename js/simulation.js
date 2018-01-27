@@ -22,7 +22,7 @@ function TargetPlanet(x, y, r, v, collisionHandler) {
 
 function HomePlanet(pos, r) {
     this.pos = pos;
-    this.r = r;
+    this.r = 30;
     this.color = Colors.GREEN_DARK;
     this.markerColor = Colors.GREEN_LIGHT;
 }
@@ -30,10 +30,9 @@ function HomePlanet(pos, r) {
 HomePlanet.prototype._drawMarker = function(delta) {
     c.fillStyle = this.markerColor;
     rotation = (Utils.angle(this.pos.x, this.pos.y, Mouse.pos.x, Mouse.pos.y)+1.9)/Math.PI;
-    Utils.drawRing(c, this.pos.x, this.pos.y, this.r + 17, this.r + 10, 0.2, rotation);
+    Utils.drawRing(c, this.pos.x, this.pos.y, this.r * 1.3, this.r * 1.4, 0.2, rotation);
     c.fill();
 }
-
 
 limitDistanceLength = function(start, end, maxLength) {
     delta = end.subtract(start)
@@ -46,14 +45,14 @@ HomePlanet.prototype._drawAimArrow = function(delta) {
     lineEnd = this.pos.add(limitDistanceLength(this.pos, Mouse.pos, 250));
     c.strokeStyle = this.markerColor;
     c.setLineDash([10, 10]);
-    c.lineWidth = 5;
+    c.lineWidth = 3.5;
     c.beginPath();
     c.moveTo(this.pos.x, this.pos.y);
     c.lineTo(lineEnd.x, lineEnd.y);
     c.stroke();
 }
 
-HomePlanet.prototype.draw = function(delta) {
+HomePlanet.prototype.draw = function() {
     c.globalAlpha=0.5;
     this._drawMarker();
     this._drawAimArrow();
@@ -73,7 +72,6 @@ function Simulation(level) {
     this.ship = new SpaceShip(
         level.startPosition.x,
         level.startPosition.y,
-        45,
         new Vec2(0, 0),
         Colors.GREEN_LIGHT
     );
@@ -84,6 +82,7 @@ function Simulation(level) {
     this.gravity = false;
     this.antiGravity = false;
     this.started = false;
+    this.pause = false;
 
     space.reset();
     for(var i = 0; i < this.co.length; i++) {
@@ -96,11 +95,11 @@ Simulation.prototype.show = function() {
 };
 
 Simulation.prototype._updateConstraints = function(delta) {
-    if (this.ship.pos.x < 0 || this.ship.pos.x > Settings.Size.MAX_WIDTH ||
-        this.ship.pos.y < 0 || this.ship.pos.y > Settings.Size.MAX_HEIGHT
+    if (this.ship.pos.x < 0 || this.ship.pos.x > Settings.Size.WIDTH_IN_UNITS  ||
+        this.ship.pos.y < 0 || this.ship.pos.y > Settings.Size.HEIGHT_IN_UNITS
     ) {
         console.log("The deep space has swallowed the ship");
-        IngameScene.restartLevel();
+        gameState.shipDestroyed();
     }
 
 }
@@ -120,7 +119,8 @@ Simulation.prototype._test_collision = function(o1, o2) {
     const pos_delta = o1.pos.subtract(o2.pos);
     distance = pos_delta.norm();
     return distance < o1.r + o2.r;
-}
+};
+
 Simulation.prototype._update_collision = function(delta) {
     collision = false;
     _.each(this.co, (co) => {
@@ -137,9 +137,12 @@ Simulation.prototype._update_collision = function(delta) {
     if(this._test_collision(this.ship, this.target)) {
         this.target.collisionHandler(this.ship);
     }
-}
+};
 
 Simulation.prototype.update = function(delta) {
+    if (this.pause) {
+        return;
+    };
     this._updateConstraints(delta);
     if(this.gravity !== 0 && this.started) {
         this._update_gravity(delta);

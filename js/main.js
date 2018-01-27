@@ -1,10 +1,9 @@
 var canvas;
 var c;
 
+var gameState;
 var simulation;
 var space;
-
-
 
 jQuery(document).ready(function() {
 

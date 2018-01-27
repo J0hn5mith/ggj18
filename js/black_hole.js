@@ -45,7 +45,6 @@ BlackHole.prototype.drawHalo = function() {
     r /= sampleCounter;
     g /= sampleCounter;
     b /= sampleCounter;
-
     var brightness = r / 255;
     if(brightness < g / 255) {
         brightness = g / 255;

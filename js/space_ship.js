@@ -1,6 +1,6 @@
-function SpaceShip(x, y, r, v, color) {
+function SpaceShip(x, y, v, color) {
     this.pos = new Vec2(x,y);
-    this.r = r;
+    this.r = 20;
     this.v = v;
     this.color = color;
     this.mass = 300;

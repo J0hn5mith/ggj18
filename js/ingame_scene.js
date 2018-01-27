@@ -1,12 +1,39 @@
 function IngameScene() {}
 
+function GameState(){
+    this.lifes = 3;
+    this.levelCounter = 0;
+}
 
-IngameScene.lifes = 3;
-IngameScene.levelCounter = 0;
-IngameScene.levelCounter = 0;
+GameState.prototype.nextLevel = function() {
+    this.levelCounter++;
+    IngameScene.restartLevel();
+};
+
+GameState.prototype.shipDestroyed = function() {
+    simulation.puase = true;
+    this.lifes--;
+    this._checkGameState();
+
+    IngameScene.restartLevel();
+}
+
+GameState.prototype._checkGameState = function() {
+    if(this.lifes <= 0){
+        this.levelCounter = 0;
+        this.lifes = 3;
+        console.log('You loose');
+    }
+    if(this.level >= 3){
+        console.log('You Win');
+    }
+}
+
+IngameScene.levelCounter = 2;
 
 IngameScene.show = function() {
 
+    gameState = new GameState();
     space = new Space();
 
     // do stuff before we update and draw this scene for the first time
@@ -18,53 +45,15 @@ IngameScene.show = function() {
 };
 
 IngameScene._loadLevels = function() {
-
-    collisionHandler = () => IngameScene.restartLevel();
-
-    const co1 = new CelestialObject(1000, 500, 50, new Vec2(0,0), '#ff1f00');
-    oo1 = new OrbitingObject(co1, 20, 100, 3, '#11ff01', collisionHandler);
-    oo2 = new OrbitingObject(co1, 20, 200, -2, '#11ff01', collisionHandler);
-    co1.orbitingObjects.push(oo1);
-    co1.orbitingObjects.push(oo2);
-
-    const co2 = new CelestialObject(1000, 900, 50, new Vec2(0,0), Colors.YELLOW_DARK);
-    oo1 = new OrbitingObject(co2, 20, 100, 3, '#11ff01', collisionHandler);
-    oo2 = new OrbitingObject(co2, 20, 200, -2, '#11ff01', collisionHandler);
-    oo3 = new OrbitingObject(co2, 20, 300, 2, '#11ff01', collisionHandler);
-    co2.orbitingObjects.push(oo1);
-    co2.orbitingObjects.push(oo2);
-    co2.orbitingObjects.push(oo3);
-
-    const co3 = new CelestialObject(800, 400, 50, new Vec2(0,0), Colors.YELLOW_LIGHT);
-    const co4 = new CelestialObject(1000, 900, 50, new Vec2(0,0), Colors.YELLOW_LIGHT);
-    oo1 = new OrbitingObject(co3, 20, 100, 3, Colors.YELLOW_DARK, collisionHandler);
-    oo2 = new OrbitingObject(co3, 20, 200, -2, Colors.YELLOW_DARK, collisionHandler);
-    oo3 = new OrbitingObject(co4, 20, 300, 2, Colors.YELLOW_DARK, collisionHandler);
-    co3.orbitingObjects.push(oo1);
-    co3.orbitingObjects.push(oo2);
-    co4.orbitingObjects.push(oo3);
-
-    const target = new TargetPlanet(1500, 500, 20, new Vec2(000, 0), (ship) => {
-        IngameScene.nextLevel();
-    });
-
-    IngameScene.levels = [
-        new Level(new Vec2(100, 500), [co1], target),
-        new Level(new Vec2(200, 100), [co2], target),
-        new Level(new Vec2(100, 500), [co3, co4], target),
-    ];
+    IngameScene.levels = Levels();
 };
 
 IngameScene.restartLevel = function() {
-    IngameScene.currentLevel = IngameScene.levels[IngameScene.levelCounter]
+    IngameScene.currentLevel = IngameScene.levels[gameState.levelCounter]
     simulation = new Simulation(IngameScene.currentLevel);
     simulation.show()
 };
 
-IngameScene.nextLevel = function() {
-    IngameScene.levelCounter++;
-    IngameScene.restartLevel();
-};
 
 IngameScene.hide = function() {
 
