@@ -24,6 +24,7 @@ function Space() {
 Space.prototype.reset = function() {
     this.blackHoles = [];
     this.suns = [];
+    this.planets = [];
 };
 
 
@@ -40,6 +41,14 @@ Space.prototype.addSun = function(pos, r) {
     var newSun = new Sun(id, pos, r);
     this.suns[id] = newSun;
     return newSun;
+};
+
+
+Space.prototype.addPlanet = function(pos, r, type) {
+    var id = this.planets.length;
+    var newPlanet = new Planet(id, pos, r, type);
+    this.planets[id] = newPlanet;
+    return newPlanet;
 };
 
 
@@ -67,6 +76,9 @@ Space.prototype.checkSunVisibility = function() {
         this.suns[i].visibility = 1.0;
         for(j = 0; j < this.blackHoles.length; j++) {
             this.suns[i].checkCover(this.blackHoles[j]);
+        }
+        for(j = 0; j < this.planets.length; j++) {
+            this.suns[i].checkCover(this.planets[j]);
         }
     }
 };
@@ -122,8 +134,18 @@ Space.prototype.drawObjects = function() {
     var i;
     var j;
 
+    var lightingSun = null;
+    if(this.suns.length > 0) {
+        lightingSun = this.suns[0];
+    } else if(this.blackHoles.length > 0) {
+        lightingSun = this.blackHoles[0];
+    }
+
     for(i = 0; i < this.suns.length; i++) {
         this.suns[i].draw();
+    }
+    for(i = 0; i < this.planets.length; i++) {
+        this.planets[i].draw(lightingSun);
     }
     for(i = 0; i < this.blackHoles.length; i++) {
         this.blackHoles[i].draw();
@@ -131,7 +153,10 @@ Space.prototype.drawObjects = function() {
     for(i = 0; i < this.suns.length; i++) {
         this.suns[i].setGlareGradient();
         for(j = 0; j < this.blackHoles.length; j++) {
-            this.suns[i].drawGlareOnObject(this.blackHoles[j]);
+            this.suns[i].drawGlareOnObject(this.blackHoles[j], 1);
+        }
+        for(j = 0; j < this.planets.length; j++) {
+            this.suns[i].drawGlareOnObject(this.planets[j], 1.02);
         }
     }
 };

@@ -57,11 +57,11 @@ Sun.prototype.draw = function() {
 };
 
 
-Sun.prototype.drawGlareOnObject = function(object) {
+Sun.prototype.drawGlareOnObject = function(object, scale) {
     var deltaX = object.pos.x - this.pos.x;
     var deltaY = object.pos.y - this.pos.y;
     if((deltaX * deltaX) + (deltaY * deltaY) < (((5 * this.r) + object.r) * ((5 * this.r) + object.r))) {
-        Utils.drawCircle(c, object.pos.x, object.pos.y, object.r);
+        Utils.drawCircle(c, object.pos.x, object.pos.y, object.r * scale);
         c.fill();
     }
 };

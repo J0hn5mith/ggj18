@@ -3,7 +3,8 @@ function Resources() {}
 
 Resources.images = {
     loading : "img/loading.png",
-    background : "img/background.png"
+    background : "img/background.png",
+    planets : "img/planets.png"
 };
 
 
