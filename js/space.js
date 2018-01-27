@@ -37,10 +37,26 @@ Space.prototype.update = function() {
 
 
 Space.prototype.draw = function() {
+
+    this.checkSunVisibility();
+
     this.drawBackground();
     this.drawBlackHoleHalos();
+    this.drawSunGlares();
     this.drawStars();
     this.drawObjects();
+};
+
+
+Space.prototype.checkSunVisibility = function() {
+    var j;
+
+    for(var i = 0; i < this.suns.length; i++) {
+        this.suns[i].visibility = 1.0;
+        for(j = 0; j < this.blackHoles.length; j++) {
+            this.suns[i].checkCover(this.blackHoles[j]);
+        }
+    }
 };
 
 
@@ -52,6 +68,13 @@ Space.prototype.drawBackground = function() {
 Space.prototype.drawBlackHoleHalos = function() {
     for(var i = 0; i < this.blackHoles.length; i++) {
         this.blackHoles[i].drawHalo();
+    }
+};
+
+
+Space.prototype.drawSunGlares = function() {
+    for(var i = 0; i < this.suns.length; i++) {
+        this.suns[i].drawGlare();
     }
 };
 
@@ -85,10 +108,18 @@ Space.prototype.drawStars = function() {
 Space.prototype.drawObjects = function() {
 
     var i;
+    var j;
+
     for(i = 0; i < this.suns.length; i++) {
         this.suns[i].draw();
     }
     for(i = 0; i < this.blackHoles.length; i++) {
         this.blackHoles[i].draw();
+    }
+    for(i = 0; i < this.suns.length; i++) {
+        this.suns[i].setGlareGradient();
+        for(j = 0; j < this.blackHoles.length; j++) {
+            this.suns[i].drawGlareOnObject(this.blackHoles[j]);
+        }
     }
 };

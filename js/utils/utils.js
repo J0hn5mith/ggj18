@@ -175,13 +175,14 @@ Utils.drawCircle = function(c, x, y, radius) {
     c.closePath();
 };
 
+
 Utils.drawRing = function(c, x, y, radiusOuter, radiusInner, gap, rotation) {
     rotation = rotation || 0;
     c.beginPath();
     c.arc(x, y, radiusOuter,  Math.PI * rotation, (2 - gap + rotation) * Math.PI , false);
     c.arc(x, y, radiusInner, (2 - gap + rotation) * Math.PI , (2 + rotation) * Math.PI, true);
     c.closePath();
-}
+};
 
 
 Utils.drawEllipse = function(c, x, y, w, h) {

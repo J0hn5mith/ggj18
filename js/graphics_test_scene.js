@@ -4,7 +4,7 @@ function GraphicsTestScene() {}
 
 GraphicsTestScene.show = function() {
     space = new Space();
-    space.addBlackHole(new Vec2(500, 200), 50);
+    space.addBlackHole(new Vec2(900, 500), 50);
     GraphicsTestScene.tester = space.addSun(new Vec2(0, 0), 40);
 };
 
