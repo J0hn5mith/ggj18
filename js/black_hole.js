@@ -16,20 +16,36 @@ BlackHole.prototype.setPos = function(pos) {
 
 BlackHole.prototype.drawHalo = function() {
 
-    var pointX = Math.round(this.pos.x * Game.scaleX) + Game.frameOffsetX;
+    var pointX = Math.round((this.pos.x + space.backgroundOffsetX) * Game.scaleX) + Game.frameOffsetX;
     var pointY = Math.round(this.pos.y * Game.scaleY) + Game.frameOffsetY;
-    var data = c.getImageData(pointX - 2, pointY - 2, 5, 5).data;
+    var startX = Utils.limit(pointX - 2, 0, 3839);
+    var endX = Utils.limit(pointX + 2, 0, 3839);
+    var startY = Utils.limit(pointY - 2, 0, 1079);
+    var endY = Utils.limit(pointY + 2, 0, 1079);
+
+    var data = space.backgroundData;
+
     var r = 0;
     var g = 0;
     var b = 0;
-    for(var i = 0; i < 100; i += 4) {
-        r += data[i    ];
-        g += data[i + 1];
-        b += data[i + 2];
+    var sampleCounter = 0;
+
+    var x;
+    var y;
+    var i;
+    for(x = startX; x <= endX; x++) {
+        for(y = startY; y <= endY; y++) {
+            i = ((y * 3840) + x) * 4;
+            r += data[i];
+            g += data[i + 1];
+            b += data[i + 2];
+            sampleCounter++;
+        }
     }
-    r /= 25;
-    g /= 25;
-    b /= 25;
+    r /= sampleCounter;
+    g /= sampleCounter;
+    b /= sampleCounter;
+
     var brightness = r / 255;
     if(brightness < g / 255) {
         brightness = g / 255;

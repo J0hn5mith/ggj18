@@ -60,7 +60,7 @@ Sun.prototype.draw = function() {
 Sun.prototype.drawGlareOnObject = function(object) {
     var deltaX = object.pos.x - this.pos.x;
     var deltaY = object.pos.y - this.pos.y;
-    if((deltaX * deltaX) + (deltaY * deltaY) < (25 * this.r * this.r)) {
+    if((deltaX * deltaX) + (deltaY * deltaY) < (((5 * this.r) + object.r) * ((5 * this.r) + object.r))) {
         Utils.drawCircle(c, object.pos.x, object.pos.y, object.r);
         c.fill();
     }

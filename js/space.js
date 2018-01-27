@@ -1,8 +1,15 @@
 function Space() {
 
+    this.backgroundCanvas = Utils.createCanvas(3840, 1080);
+    this.backgroundC = Utils.getContext(this.backgroundCanvas);
+    Img.drawIn(this.backgroundC, "background", 0, 0);
+    this.backgroundData = this.backgroundC.getImageData(0, 0, 3840, 1080).data;
+
+    this.backgroundOffsetX = 0;
+
     this.stars = [];
 
-    for(var i = 0; i < 2000; i++) {
+    for(var i = 0; i < 2400; i++) {
         this.stars.push({
             pos : new Vec2(Utils.randFloat(0, 3840), Utils.randFloat(0, 1080)),
             a : Utils.randFloat(0, HALF_PI),
@@ -66,7 +73,7 @@ Space.prototype.checkSunVisibility = function() {
 
 
 Space.prototype.drawBackground = function() {
-    Img.drawCustom("background", 0, 0, 1920, 1080, 0, 0, 1920, 1080);
+    Img.drawCustom("background", this.backgroundOffsetX, 0, 1920, 1080, 0, 0, 1920, 1080);
 };
 
 
@@ -91,7 +98,7 @@ Space.prototype.drawStars = function() {
     c.fillStyle = "#fff";
     for(var i = 0; i < this.stars.length; i++) {
         star = this.stars[i];
-        if(star.pos.x > 0 && star.pos.x <= 1920) {
+        if(star.pos.x >= this.backgroundOffsetX && star.pos.x <= this.backgroundOffsetX + 1920) {
             pos = star.pos;
             for(j = 0; j < this.blackHoles.length; j++) {
                 if(this.blackHoles[j].isStarAffected(pos)) {

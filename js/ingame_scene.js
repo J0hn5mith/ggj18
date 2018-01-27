@@ -20,6 +20,7 @@ IngameScene.show = function() {
 IngameScene._loadLevels = function() {
 
     collisionHandler = () => IngameScene.restartLevel();
+
     const co1 = new CelestialObject(1000, 500, 50, new Vec2(0,0), '#ff1f00');
     oo1 = new OrbitingObject(co1, 20, 100, 3, '#11ff01', collisionHandler);
     oo2 = new OrbitingObject(co1, 20, 200, -2, '#11ff01', collisionHandler);
