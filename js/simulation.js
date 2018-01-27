@@ -84,11 +84,16 @@ function Simulation(level) {
     this.gravity = false;
     this.antiGravity = false;
     this.started = false;
+
+    space.reset();
+    for(var i = 0; i < this.co.length; i++) {
+        this.co[i].initDrawable();
+    }
 }
 
 Simulation.prototype.show = function() {
     this._register_keys();
-}
+};
 
 Simulation.prototype._updateConstraints = function(delta) {
     if (this.ship.pos.x < 0 || this.ship.pos.x > Settings.Size.MAX_WIDTH ||

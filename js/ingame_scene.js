@@ -4,6 +4,19 @@ function IngameScene() {}
 IngameScene.lifes = 3;
 IngameScene.levelCounter = 0;
 IngameScene.levelCounter = 0;
+
+IngameScene.show = function() {
+
+    space = new Space();
+
+    // do stuff before we update and draw this scene for the first time
+    IngameScene._loadLevels();
+    IngameScene.hud = new HUD();
+    IngameScene.hud.show();
+
+    IngameScene.restartLevel()
+};
+
 IngameScene._loadLevels = function() {
 
     collisionHandler = () => IngameScene.restartLevel();
@@ -41,18 +54,7 @@ IngameScene._loadLevels = function() {
     ];
 };
 
-IngameScene.show = function() {
-
-    // do stuff before we update and draw this scene for the first time
-    IngameScene._loadLevels();
-    IngameScene.hud =  new HUD();
-    IngameScene.hud.show();
-
-    IngameScene.restartLevel()
-};
-
 IngameScene.restartLevel = function() {
-    //space = new Space();
     IngameScene.currentLevel = IngameScene.levels[IngameScene.levelCounter]
     simulation = new Simulation(IngameScene.currentLevel);
     simulation.show()

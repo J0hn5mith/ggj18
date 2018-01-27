@@ -8,7 +8,14 @@ function OrbitingObject(co, r, orbitingRadius, orbitingSpeed, color, collisionHa
     this.orbitAngle = 0.5;
     this.orbitingSpeed = orbitingSpeed;
     this.collisionHandler = collisionHandler;
+
+    this.drawable = null;
 }
+
+
+OrbitingObject.prototype.initDrawable = function() {
+    this.drawable = space.addSun(this.pos, this.r);
+};
 
 
 OrbitingObject.prototype.update = function(delta) {

@@ -5,7 +5,17 @@ function CelestialObject(x, y, r, v, color) {
     this.color = color;
     this.mass = 300;
     this.orbitingObjects = [];
+
+    this.drawable = null;
 }
+
+
+CelestialObject.prototype.initDrawable = function() {
+    this.drawable = space.addBlackHole(this.pos, this.r);
+    _.each(this.orbitingObjects, (oo) => {
+        oo.initDrawable();
+    });
+};
 
 
 CelestialObject.prototype.update = function(delta) {

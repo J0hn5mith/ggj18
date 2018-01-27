@@ -10,9 +10,14 @@ function Space() {
         });
     }
 
+    this.reset();
+}
+
+
+Space.prototype.reset = function() {
     this.blackHoles = [];
     this.suns = [];
-}
+};
 
 
 Space.prototype.addBlackHole = function(pos, r) {
