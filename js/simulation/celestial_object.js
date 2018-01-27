@@ -5,6 +5,8 @@ function CelestialObject(x, y, r, v, color) {
     this.color = color;
     this.mass = 300;
     this.orbitingObjects = [];
+
+    space.addBlackHole(this.pos, this.r);
 }
 
 CelestialObject.prototype.update = function(delta) {

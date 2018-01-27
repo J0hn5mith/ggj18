@@ -1,6 +1,10 @@
 function IngameScene() {}
+
+
 IngameScene.levelCounter = 2;
 IngameScene._loadLevels = function() {
+
+    space = new Space();
 
     collisionHandler = () => IngameScene.restartLevel();
     const co1 = new CelestialObject(1000, 500, 50, new Vec2(0,0), '#ff1f00');
@@ -83,11 +87,12 @@ IngameScene.update = function() {
 IngameScene.draw = function() {
 
     // clear scene
-    c.fillStyle = Colors.BLUE_DARK;
+    c.fillStyle = "#000";
     c.fillRect(0, 0, Game.width, Game.height);
 
     // draw stuff here
     simulation.draw()
+    //space.draw();
 
     // draw pause screen when paused
     if(Game.paused) {

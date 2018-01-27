@@ -59,7 +59,7 @@ BlackHole.prototype.drawHalo = function() {
     gradient.addColorStop(1, "rgba(" + r + ", " + g + ", " + b + ", 0.0)");
 
     c.fillStyle = gradient;
-    Utils.drawCircle(c, this.pos.x, this.pos.y, this.r * 2);
+    Utils.drawCircle(c, this.pos.x, this.pos.y, this.r * 3);
     c.fill();
 };
 

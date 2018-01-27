@@ -8,6 +8,8 @@ function OrbitingObject(co, r, orbitingRadius, orbitingSpeed, color, collisionHa
     this.orbitAngle = 0.5;
     this.orbitingSpeed = orbitingSpeed;
     this.collisionHandler = collisionHandler;
+
+    this.drawable = space.addBlackHole(this.pos, this.r);
 }
 
 OrbitingObject.prototype.update = function(delta) {
@@ -16,6 +18,8 @@ OrbitingObject.prototype.update = function(delta) {
     var orbit = new Vec2(this.orbitingRadius, 0);
     orbit = orbit.rotate(this.orbitAngle);
     this.pos = this.co.pos.add(orbit);
+
+    this.drawable.setPos(this.pos);
 }
 
 OrbitingObject.prototype.draw = function(delta) {

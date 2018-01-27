@@ -11,8 +11,7 @@ function Space() {
     }
 
     this.blackHoles = [];
-
-    this.tester = this.addBlackHole(new Vec2(0, 0), 50);
+    this.suns = [];
 }
 
 
@@ -24,8 +23,16 @@ Space.prototype.addBlackHole = function(pos, r) {
 };
 
 
+Space.prototype.addSun = function(pos, r) {
+    var id = this.suns.length;
+    var newSun = new Sun(id, pos, r);
+    this.suns[id] = newSun;
+    return newSun;
+};
+
+
 Space.prototype.update = function() {
-    this.tester.setPos(Mouse.pos);
+
 };
 
 
@@ -78,6 +85,9 @@ Space.prototype.drawStars = function() {
 Space.prototype.drawObjects = function() {
 
     var i;
+    for(i = 0; i < this.suns.length; i++) {
+        this.suns[i].draw();
+    }
     for(i = 0; i < this.blackHoles.length; i++) {
         this.blackHoles[i].draw();
     }
