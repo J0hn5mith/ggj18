@@ -8,7 +8,14 @@ function CelestialObject(x, y, r, v, color) {
     this.mass = 300;
 }
 
-
+function OrbitingObject(co, x, y, r, v, color) {
+    this.co = co;
+    this.pos = new Vec2(x,y);
+    this.r = r;
+    this.v = v;
+    this.color = color;
+    this.mass = 300;
+}
 
 function SpaceShip(x, y, r, v, color) {
     this.pos = new Vec2(x,y);
@@ -18,18 +25,28 @@ function SpaceShip(x, y, r, v, color) {
     this.mass = 300;
 }
 
+function Target(x, y, r, v, color, collision_handler) {
+    this.pos = new Vec2(x,y);
+    this.r = r;
+    this.v = v;
+    this.color = color;
+    this.mass = 300;
+    this.collision_handler = collision_handler;
+}
+
 
 function Simulation() {
-
-    this.ship = new SpaceShip(500, 200, 20, new Vec2(120, 0), '#11ff01');
-
+    this.ship = new SpaceShip(100, 500, 20, new Vec2(100, 100), '#11ff01');
+    this.target = new Target(1500, 500, 20, new Vec2(000, 0), '#11f001', (ship) => {
+        console.log("You Win!");
+    });
     this.co = [ //Celestial Objects
         //new CelestialObject(500, 800, 50, 00, '#ffff01'),
-        new CelestialObject(500, 500, 50, new Vec2(0,0), '#ff1f00'),
+        new CelestialObject(1000, 500, 50, new Vec2(0,0), '#ff1f00'),
     ];
 
-    this.gravity = false;
-    this.antiGravity = false;
+this.gravity = false;
+this.antiGravity = false;
 }
 
 Simulation.prototype.show = function() {
@@ -48,6 +65,24 @@ Simulation.prototype._update_gravity = function(delta) {
     this.ship.v = this.ship.v.add(total_ac.multiply(delta));
 }
 
+Simulation.prototype._test_collision = function(o1, o2) {
+    const pos_delta = o1.pos.subtract(o2.pos);
+    distance = pos_delta.norm();
+    return distance < o1.r + o2.r;
+}
+Simulation.prototype._update_collision = function(delta) {
+    collision = false;
+    _.each(this.co, (co) => {
+        collision = collision || this._test_collision(co, this.ship);
+    });
+    if(collision) {
+        this.ship.v = this.ship.v.multiply(-1);
+    }
+    if(this._test_collision(this.ship, this.target)) {
+        this.target.collision_handler(this.ship);
+    }
+}
+
 Simulation.prototype.update = function(delta) {
     if(this.gravity) {
         this._update_gravity(delta);
@@ -56,7 +91,7 @@ Simulation.prototype.update = function(delta) {
         co.pos = co.pos.add(co.v.multiply(delta));
     });
     this.ship.pos = this.ship.pos.add(this.ship.v.multiply(delta));
-
+    this._update_collision(delta);
 };
 
 Simulation.prototype._draw_co = function(co) {
@@ -67,6 +102,7 @@ Simulation.prototype._draw_co = function(co) {
 
 Simulation.prototype.draw = function() {
     this._draw_co(this.ship);
+    this._draw_co(this.target);
     _.each(this.co, (co) => {
         this._draw_co(co);
     });
