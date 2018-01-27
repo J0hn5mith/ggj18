@@ -4,6 +4,8 @@ function GraphicsTestScene() {}
 
 GraphicsTestScene.show = function() {
     space = new Space();
+    space.addBlackHole(new Vec2(500, 200), 50);
+    GraphicsTestScene.tester = space.addSun(new Vec2(0, 0), 40);
 };
 
 
@@ -16,6 +18,7 @@ GraphicsTestScene.update = function() {
 
 
     if(!Game.paused) {
+        GraphicsTestScene.tester.setPos(Mouse.pos);
         space.update();
     }
 };
