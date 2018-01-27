@@ -8,22 +8,26 @@ function OrbitingObject(co, r, orbitingRadius, orbitingSpeed, color, collisionHa
     this.orbitAngle = 0.5;
     this.orbitingSpeed = orbitingSpeed;
     this.collisionHandler = collisionHandler;
-
-    this.drawable = space.addSun(this.pos, this.r);
 }
+
 
 OrbitingObject.prototype.update = function(delta) {
     this.orbitAngle += this.orbitingSpeed * delta;
-    // TODO test for overflow
+    if(this.orbitAngle > TWO_PI) {
+        this.orbitAngle -= TWO_PI;
+    } else if(this.orbitAngle < -TWO_PI) {
+        this.orbitAngle += TWO_PI;
+    }
     var orbit = new Vec2(this.orbitingRadius, 0);
     orbit = orbit.rotate(this.orbitAngle);
     this.pos = this.co.pos.add(orbit);
 
     this.drawable.setPos(this.pos);
-}
+};
+
 
 OrbitingObject.prototype.draw = function(delta) {
     c.fillStyle = this.color;
     Utils.drawCircle(c, this.pos.x, this.pos.y, this.r);
     c.fill();
-}
+};

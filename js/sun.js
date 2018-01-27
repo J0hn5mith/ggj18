@@ -21,7 +21,6 @@ Sun.prototype.checkCover = function(object) {
     var coverRatio = (this.r + dist - object.r) / (2 * this.r);
     coverRatio = Utils.limit(coverRatio, 0.0, 1.0);
     this.visibility *= coverRatio;
-    console.log(this.visibility);
 };
 
 
