@@ -23,6 +23,10 @@ function SpaceShip(x, y, v, color) {
         friction : { x : 0.0, y : 0.0, z : 0.0 },
         life : { min : 0.2, max : 1.0 }
     });
+
+    this.bodyAni = Utils.randFloat(0, TWO_PI);
+    this.leftArmAni = Utils.randFloat(0, TWO_PI);
+    this.rightArmAni = Utils.randFloat(0, TWO_PI);
 }
 
 SpaceShip.prototype.draw = function() {
@@ -37,4 +41,40 @@ SpaceShip.prototype.draw = function() {
     c.fillStyle = this.color;
     //Utils.drawCircle(c, this.pos.x, this.pos.y, this.r);
     c.fill();
-}
+
+    this.bodyAni += Timer.delta * 2.3;
+    this.leftArmAni += Timer.delta * 3.8;
+    this.rightArmAni += Timer.delta * 4.2;
+    if(this.bodyAni > TWO_PI) {
+        this.bodyAni -= TWO_PI;
+    }
+    if(this.leftArmAni > TWO_PI) {
+        this.leftArmAni -= TWO_PI;
+    }
+    if(this.rightArmAni > TWO_PI) {
+        this.rightArmAni -= TWO_PI;
+    }
+
+    c.save();
+    c.translate(this.pos.x, this.pos.y);
+    c.scale(0.75, 0.75);
+    c.rotate(Math.sin(this.bodyAni));
+    c.translate(-60, -60);
+    Img.draw("alienBody", 0, 0);
+
+    c.save();
+    c.translate(45, 53);
+    c.rotate(Math.sin(this.leftArmAni));
+    c.translate(-45, -53);
+    Img.draw("alienLeftArm", 0, 0);
+    c.restore();
+
+    c.save();
+    c.translate(77, 54);
+    c.rotate(Math.sin(this.rightArmAni));
+    c.translate(-77, -54);
+    Img.draw("alienRightArm", 0, 0);
+    c.restore();
+
+    c.restore();
+};
