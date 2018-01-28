@@ -44,7 +44,7 @@ HUD.prototype._drawTutorial = function() {
         this.tutorialText.drawPosText(
             simulation.start.pos.x -10,
             simulation.start.pos.y + simulation.start.r + 75,
-            'On this planet the transmissoin starts...',
+            'On this planet the transmission starts...',
         );
     } else if (gameState.tutorialMode === 2) {
         this.tutorialText.drawPosText(
@@ -56,31 +56,31 @@ HUD.prototype._drawTutorial = function() {
         this.tutorialText.drawPosText(
             simulation.co[0].pos.x - 300,
             simulation.co[0].pos.y + simulation.start.r + 150,
-            'But be aware of the starts.\nThey will intercept the transmission.',
+            'But be aware of the stars.\nThey will intercept the transmission.',
         );
     } else if (gameState.tutorialMode === 4) {
         this.tutorialText.drawPosText(
             1250,
             100,
-            'The deep spce is dangerous as well.\nThransmisions get lost here quite fast.',
+            'Deep space is dangerous as well.\nTransmissions get lost here quite quickly.',
         );
     } else if (gameState.tutorialMode === 7) {
         this.tutorialText.drawPosText(
             simulation.co[0].pos.x - 300,
             simulation.co[0].pos.y + simulation.start.r + 150,
-            'Suns are not only dangerous. They can help as well.\nBy pressing "R" you take advantage of the sun\'s \ngravity and you can bend the trajectory of your\ntransmission.',
+            'But suns are not only dangerous. They can help as well.\nBy pressing "G" you take advantage of the sun\'s \ngravity and bend the trajectory of your transmission.',
         );
     } else if (gameState.tutorialMode === 6) {
         this.tutorialText.drawPosText(
             simulation.start.pos.x -20,
             simulation.start.pos.y + simulation.start.r + 75,
-            'Pointing further away from the planet makes\nthe transmission travel faster.\nSo, let\'s get started...',
+            'Pointing further away from the planet makes\nthe transmission travel faster.',
         );
     } else if(gameState.tutorialMode === 5){
         this.tutorialText.drawPosText(
             simulation.start.pos.x -20,
             simulation.start.pos.y + simulation.start.r + 75,
-            'The mouse is used to direct and innitiate\nthe transmission.',
+            'The mouse is used to direct and initiate\nthe transmission.',
         );
     }
 };

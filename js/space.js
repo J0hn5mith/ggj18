@@ -99,7 +99,7 @@ Space.prototype.update = function() {
 
             Sound.setVolume("ingame_serious", 0);
             Sound.play("ingame_serious", {loops: true});
-            Sound.fadeVolume ("ingame_serious", 0, 100, 2);
+            Sound.fadeVolume ("ingame_serious", 0, 50, 2);
         } else {
             this.starsVisibility = Utils.scale0to1(this.intro, 5 / 81, 71 / 81);
             this.sunSecondaryGlareVisibility = Utils.scale0to1(this.intro, 5 / 81, 71 / 81);
@@ -271,7 +271,7 @@ Space.prototype.drawIntro = function() {
     if(this.intro > (47.2 / 81) && this.intro < (53 / 81)) {
         Text.draw(Game.centerX, 900, 50, "geometria", "center", "#eee", "MADE  FOR  GLOBAL  GAME  JAM  2018");
     }
-    if(this.intro > (59.2 / 81) && this.intro < (71.5 / 81)) {
+    if(this.intro > (59.2 / 81) && this.intro < (70.5 / 81)) {
         Text.draw(Game.centerX, 900, 90, "geometria", "center", "#eee", "2018:  A  TRANSMISSION  ODYSSEY");
     }
 };

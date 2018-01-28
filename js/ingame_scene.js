@@ -20,7 +20,7 @@ GameState.prototype.shipDestroyed = function() {
     this._checkGameState();
     this.shaker.shake(8, 20, 0);
 
-    Sound.fadeVolume ("ingame_fun", 100, 0, 2);
+    Sound.fadeVolume ("ingame_fun", 50, 0, 2);
     IngameScene.restartLevel();
 };
 
