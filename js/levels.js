@@ -6,11 +6,11 @@ function Level(startPosition, celestialObjects, target){
 
 function Level1() {
     collisionHandler = () => gameState.shipDestroyed();
-    const co1 = new CelestialObject(1000, 500, 50, new Vec2(0,0), '#ff1f00');
+    const co1 = new CelestialObject(960, 400, 45, new Vec2(0,0), '#ff1f00');
     return new Level(
-        new Vec2(100, 500),
+        new Vec2(150, 700),
         [co1],
-        new TargetPlanet(1500, 500, 20, new Vec2(000, 0), (ship) => {
+        new TargetPlanet(1500, 200, 20, new Vec2(0, 0), (ship) => {
             gameState.nextLevel();
         })
     );

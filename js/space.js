@@ -10,13 +10,14 @@ function Space() {
     this.backgroundCurrentPos = 1;
     this.backgroundDir = 1;
 
-    this.intro = 0.0;
+    this.intro = Space.INTRO_START;
     this.playingIntro = true;
     this.starsVisibility = 0.0;
     this.sunSecondaryGlareVisibility = 0.0;
     this.sunY = 400;
     this.sunRisePlanetY = 700;
     this.sunRise = 0.0;
+    this.introFlip = 0.0;
 
     this.stars = [];
 
@@ -34,7 +35,8 @@ function Space() {
 }
 
 
-Space.INTRO_SPEED = 1.0 / 90.0; // change this to 1 for faster intro;
+Space.INTRO_START = 0.0;
+Space.INTRO_SPEED = 1.0 / 81.0; // change this to 1 for faster intro;
 
 
 Space.prototype.reset = function() {
@@ -71,9 +73,9 @@ Space.prototype.addSun = function(pos, r) {
 };
 
 
-Space.prototype.addPlanet = function(pos, r, type) {
+Space.prototype.addPlanet = function(pos, r, type, orbit) {
     var id = this.planets.length;
-    var newPlanet = new Planet(id, pos, r, type);
+    var newPlanet = new Planet(id, pos, r, type, orbit);
     this.planets[id] = newPlanet;
     return newPlanet;
 };
@@ -81,7 +83,7 @@ Space.prototype.addPlanet = function(pos, r, type) {
 
 Space.prototype.update = function() {
     if(this.backgroundCurrentPos !== this.backgroundTargetPos) {
-        this.backgroundCurrentPos += this.backgroundDir * Timer.delta * 0.2;
+        this.backgroundCurrentPos += this.backgroundDir * Timer.delta * (this.playingIntro ? (1 / 10) : 0.2);
         this.backgroundCurrentPos = Utils.limit(this.backgroundCurrentPos, 0, 1);
         this.backgroundOffsetX = Interpolate.cube(this.backgroundCurrentPos) * 1920;
     }
@@ -93,10 +95,16 @@ Space.prototype.update = function() {
             this.starsVisibility = 1.0;
             this.sunSecondaryGlareVisibility = 1.0;
             this.sunRise = 1.0;
+            this.introFlip = 1.0;
         } else {
-            this.starsVisibility = Utils.scale0to1(this.intro, 5 / 90, 71 / 90);
-            this.sunSecondaryGlareVisibility = Utils.scale0to1(this.intro, 5 / 90, 71 / 90);
-            this.sunRise = Utils.scale0to1(this.intro, 5 / 90, 71 / 90);
+            this.starsVisibility = Utils.scale0to1(this.intro, 5 / 81, 71 / 81);
+            this.sunSecondaryGlareVisibility = Utils.scale0to1(this.intro, 5 / 81, 71 / 81);
+            this.sunRise = Utils.scale0to1(this.intro, 5 / 81, 71 / 81);
+            this.introFlip = Utils.scale0to1(this.intro, 71 / 81, 1);
+        }
+        if(this.intro >= 71 / 81) {
+            this.backgroundDir = -1;
+            this.backgroundTargetPos = 0;
         }
         this.planets[0].pos.y = this.sunY + (Interpolate.sin(this.sunRise) * (this.sunRisePlanetY - this.sunY));
     }
@@ -246,20 +254,20 @@ Space.prototype.drawIntro = function() {
         c.globalAlpha = 1;
     }
 
-    if(this.intro > (20.95 / 90) && this.intro < (25.9 / 90)) {
+    if(this.intro > (20.95 / 81) && this.intro < (25.9 / 81)) {
         Text.draw(Game.centerX, 900, 50, "geometria", "center", "#eee", "A  GAME  BY  JAN  MEIER  AND  HENRY  RAYMOND");
     }
-    if(this.intro > (29.1 / 90) && this.intro < (34 / 90)) {
+    if(this.intro > (29.1 / 81) && this.intro < (34 / 81)) {
         Text.draw(Game.centerX, 900, 50, "geometria", "center", "#eee", "MUSIC  BY  VIKTOR  VOGT");
     }
-    if(this.intro > (39.2 / 90) && this.intro < (43.5 / 90)) {
+    if(this.intro > (39.2 / 81) && this.intro < (43.5 / 81)) {
         Text.draw(Game.centerX, 870, 50, "geometria", "center", "#eee", "\"ALSO  SPRACH  ZARATHUSTRA\"  BY  RICHARD  STRAUSS");
         Text.draw(Game.centerX, 930, 50, "geometria", "center", "#eee", "PERFORMED  BY  UNIVERSITY  OF  CHICAGO  ORCHESTRA");
     }
-    if(this.intro > (47.2 / 90) && this.intro < (53 / 90)) {
+    if(this.intro > (47.2 / 81) && this.intro < (53 / 81)) {
         Text.draw(Game.centerX, 900, 50, "geometria", "center", "#eee", "MADE  FOR  GLOBAL  GAME  JAM  2018");
     }
-    if(this.intro > (59.2 / 90) && this.intro < (71.5 / 90)) {
+    if(this.intro > (59.2 / 81) && this.intro < (71.5 / 81)) {
         Text.draw(Game.centerX, 900, 90, "geometria", "center", "#eee", "2018:  A  TRANSMISSION  ODYSSEY");
     }
 };

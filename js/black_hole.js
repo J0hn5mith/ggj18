@@ -14,10 +14,23 @@ BlackHole.prototype.setPos = function(pos) {
 };
 
 
+BlackHole.prototype.getPos = function() {
+    if(space.playingIntro) {
+        var clone = this.pos.copy();
+        clone.x = Game.centerX + (Interpolate.quad(space.introFlip) * (this.pos.x - Game.centerX));
+        return clone;
+    } else {
+        return this.pos;
+    }
+};
+
+
 BlackHole.prototype.drawHalo = function() {
 
-    var pointX = Math.round((this.pos.x + space.backgroundOffsetX) * Game.scaleX) + Game.frameOffsetX;
-    var pointY = Math.round(this.pos.y * Game.scaleY) + Game.frameOffsetY;
+    var pos = this.getPos();
+
+    var pointX = Math.round((pos.x + space.backgroundOffsetX) * Game.scaleX) + Game.frameOffsetX;
+    var pointY = Math.round(pos.y * Game.scaleY) + Game.frameOffsetY;
     var startX = Utils.limit(pointX - 2, 0, 3839);
     var endX = Utils.limit(pointX + 2, 0, 3839);
     var startY = Utils.limit(pointY - 2, 0, 1079);
