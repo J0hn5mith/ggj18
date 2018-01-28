@@ -36,7 +36,7 @@ function Space() {
 
 
 Space.INTRO_START = 0.0;
-Space.INTRO_SPEED = 1.0 / 81.0; // change this to 1 for faster intro;
+Space.INTRO_SPEED = 1.0 / 3; //81.0; // change this to 1 for faster intro;
 
 
 Space.prototype.reset = function() {
