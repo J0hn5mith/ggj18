@@ -4,7 +4,7 @@ function GameState(){
     this.lifes = 3;
     this.levelCounter = 0;
 
-    this.tutorialMode = 0;
+    this.tutorialMode = 1;
 
     this.shaker = new Shaking();
 }
@@ -22,7 +22,7 @@ GameState.prototype.shipDestroyed = function() {
 
     Sound.fadeVolume ("ingame_fun", 100, 0, 2);
     IngameScene.restartLevel();
-}
+};
 
 GameState.prototype._checkGameState = function() {
     if(this.lifes <= 0){
@@ -33,7 +33,7 @@ GameState.prototype._checkGameState = function() {
     if(this.level >= 3){
         console.log('You Win');
     }
-}
+};
 
 IngameScene.levelCounter = 2;
 
@@ -48,10 +48,10 @@ IngameScene.show = function() {
     IngameScene.hud.show();
 
     IngameScene.restartLevel()
-
-    Sound.setVolume("ingame_serious", 0);
-    Sound.play("ingame_serious");
 };
+
+IngameScene.introFinished = function() {
+}
 
 IngameScene._loadLevels = function() {
     IngameScene.levels = Levels();
@@ -81,8 +81,10 @@ IngameScene.update = function() {
     // update stuff here
 
     if(!Game.paused) {
-        simulation.update(Timer.delta)
-        // update stuff except when paused
+        if(!space.playingIntro) {
+            simulation.update(Timer.delta);
+        }
+        space.update();
     }
 };
 
@@ -96,8 +98,11 @@ IngameScene.draw = function() {
     // draw stuff here
     gameState.shaker.apply();
     space.draw();
-    simulation.draw()
-    IngameScene.hud.draw();
+    if(!space.playingIntro) {
+        simulation.draw();
+        IngameScene.hud.draw();
+    }
+
     gameState.shaker.remove();
 
     // draw pause screen when paused

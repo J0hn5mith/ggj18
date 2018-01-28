@@ -25,7 +25,7 @@ function TargetPlanet(x, y, r, v, collisionHandler) {
 }
 
 TargetPlanet.prototype.show = function(pos, r) {
-    this.drawable = space.addPlanet(this.pos, this.r, 5);
+    this.drawable = space.addPlanet(this.pos, this.r, 5, 600);
 };
 
 TargetPlanet.prototype.draw = function(delta) {
@@ -48,18 +48,18 @@ TargetPlanet.prototype._drawMarker = function(delta) {
         rotation
     );
     c.fill();
-}
+};
 
 
 function HomePlanet(pos, r) {
     this.pos = pos;
-    this.r = 30;
+    this.r = r;
     this.color = Colors.GREEN_DARK;
     this.markerColor = Colors.GREEN_LIGHT;
-};
+}
 
-HomePlanet.prototype.show = function(pos, r) {
-    this.drawable = space.addPlanet(this.pos, this.r, 1);
+HomePlanet.prototype.show = function() {
+    this.drawable = space.addPlanet(this.pos, this.r, 1, 600);
 };
 
 HomePlanet.prototype._drawMarker = function(delta) {
@@ -67,7 +67,7 @@ HomePlanet.prototype._drawMarker = function(delta) {
     rotation = (Utils.angle(this.pos.x, this.pos.y, Mouse.pos.x, Mouse.pos.y)+1.9)/Math.PI;
     Utils.drawRing(c, this.pos.x, this.pos.y, this.r * 1.3, this.r * 1.4, 0.2, rotation);
     c.fill();
-}
+};
 
 limitDistanceLength = function(start, end, maxLength, minLength) {
     minLength = minLength || 0;
@@ -75,7 +75,7 @@ limitDistanceLength = function(start, end, maxLength, minLength) {
     originalLength = delta.norm()
     length = Utils.limit(originalLength, minLength, maxLength)
     return delta.normalize().multiply(length);
-}
+};
 
 HomePlanet.prototype._drawAimArrow = function(delta) {
     lineEnd = this.pos.add(limitDistanceLength(this.pos, Mouse.pos, 250));
@@ -86,7 +86,7 @@ HomePlanet.prototype._drawAimArrow = function(delta) {
     c.moveTo(this.pos.x, this.pos.y);
     c.lineTo(lineEnd.x, lineEnd.y);
     c.stroke();
-}
+};
 
 HomePlanet.prototype.draw = function() {
     c.globalAlpha=0.5;
@@ -96,7 +96,7 @@ HomePlanet.prototype.draw = function() {
     c.fillStyle = this.color;
     //Utils.drawCircle(c, this.pos.x, this.pos.y, this.r);
     c.fill();
-}
+};
 
 function Simulation(level) {
     this.ship = new SpaceShip(
@@ -105,7 +105,7 @@ function Simulation(level) {
         new Vec2(0, 0),
         Colors.GREEN_LIGHT
     );
-    this.start = new HomePlanet(level.startPosition, 50);
+    this.start = new HomePlanet(level.startPosition, (gameState.levelCounter === 0 ? 55 : 30));
     this.target = level.target;
     this.co = level.celestialObjects;
 
@@ -223,16 +223,17 @@ Simulation.prototype._register_keys = function() {
     Keyboard.registerKeyUpHandler(Keyboard.H, () => this.gravity = 0);
 
     Mouse.left.registerUpCallback('shoot', () => {
-        if(!this.started && gameState.tutorialMode === 0) {
-            this.started = true;
-            this._accellerateShip()
-        }
-        if(gameState.tutorialMode > 0) {
-            gameState.tutorialMode++;
-            if (gameState.tutorialMode >= 8) {
-                gameState.tutorialMode = 0;
+        if(!space.showingIntro) {
+            if(!this.started && gameState.tutorialMode === 0 ) {
+                this.started = true;
+                this._accellerateShip()
+            }
+            if(gameState.tutorialMode > 0) {
+                gameState.tutorialMode++;
+                if (gameState.tutorialMode >= 8) {
+                    gameState.tutorialMode = 0;
+                }
             }
         }
-
     });
 }
