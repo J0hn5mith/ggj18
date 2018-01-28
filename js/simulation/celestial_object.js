@@ -1,17 +1,24 @@
-function CelestialObject(x, y, r, v, color) {
+CO_SUN = 0;
+CO_BLACK_HOLE = 1;
+
+function CelestialObject(x, y, r, v, color, type) {
     this.pos = new Vec2(x,y);
     this.r = r;
     this.v = v;
     this.color = color;
     this.mass = 300;
     this.orbitingObjects = [];
-
     this.drawable = null;
+    this.type = type || CO_SUN;
 }
 
 
 CelestialObject.prototype.initDrawable = function() {
-    this.drawable = space.addBlackHole(this.pos, this.r);
+    if(this.type === CO_SUN) {
+        this.drawable = space.addSun(this.pos, this.r);
+    } else {
+        this.drawable = space.addBlackHole(this.pos, this.r);
+    }
     _.each(this.orbitingObjects, (oo) => {
         oo.initDrawable();
     });

@@ -18,14 +18,49 @@ function TargetPlanet(x, y, r, v, collisionHandler) {
     this.v = v;
     this.color = Colors.RED_DARK;
     this.collisionHandler = collisionHandler;
+    this.markerColor = Colors.RED_LIGHT;
+    this.markerRadius = 2.0; // 1 = same radius as planet
+    this.markerWidth = 0.1;
+    this.markerPuls = 0;
 }
+
+TargetPlanet.prototype.show = function(pos, r) {
+    this.drawable = space.addPlanet(this.pos, this.r, 5);
+};
+
+TargetPlanet.prototype.draw = function(delta) {
+    c.globalAlpha=0.5;
+    this._drawMarker(delta);
+    c.globalAlpha=1;
+}
+
+TargetPlanet.prototype._drawMarker = function(delta) {
+    c.fillStyle = this.markerColor;
+    rotation = (Utils.angle(this.pos.x, this.pos.y, Mouse.pos.x, Mouse.pos.y)+1.9)/Math.PI;
+    const currentMarkerRadius = this.markerRadius + Math.sin(this.markerPuls++/40)/4.5;
+    Utils.drawRing(
+        c,
+        this.pos.x,
+        this.pos.y,
+        this.r * currentMarkerRadius,
+        this.r * (currentMarkerRadius + this.markerWidth),
+        0.0,
+        rotation
+    );
+    c.fill();
+}
+
 
 function HomePlanet(pos, r) {
     this.pos = pos;
     this.r = 30;
     this.color = Colors.GREEN_DARK;
     this.markerColor = Colors.GREEN_LIGHT;
-}
+};
+
+HomePlanet.prototype.show = function(pos, r) {
+    this.drawable = space.addPlanet(this.pos, this.r, 1);
+};
 
 HomePlanet.prototype._drawMarker = function(delta) {
     c.fillStyle = this.markerColor;
@@ -34,10 +69,11 @@ HomePlanet.prototype._drawMarker = function(delta) {
     c.fill();
 }
 
-limitDistanceLength = function(start, end, maxLength) {
+limitDistanceLength = function(start, end, maxLength, minLength) {
+    minLength = minLength || 0;
     delta = end.subtract(start)
     originalLength = delta.norm()
-    length = Utils.limit(originalLength, 0, maxLength)
+    length = Utils.limit(originalLength, minLength, maxLength)
     return delta.normalize().multiply(length);
 }
 
@@ -58,14 +94,8 @@ HomePlanet.prototype.draw = function() {
     this._drawAimArrow();
     c.globalAlpha=1;
     c.fillStyle = this.color;
-    Utils.drawCircle(c, this.pos.x, this.pos.y, this.r);
+    //Utils.drawCircle(c, this.pos.x, this.pos.y, this.r);
     c.fill();
-}
-
-function Level(startPosition, celestialObjects, target){
-    this.startPosition = startPosition;
-    this.celestialObjects = celestialObjects;
-    this.target = target;
 }
 
 function Simulation(level) {
@@ -92,6 +122,8 @@ function Simulation(level) {
 
 Simulation.prototype.show = function() {
     this._register_keys();
+    this.start.show();
+    this.target.show();
 };
 
 Simulation.prototype._updateConstraints = function(delta) {
@@ -132,7 +164,7 @@ Simulation.prototype._update_collision = function(delta) {
         });
     });
     if(collision) {
-        this.ship.v = this.ship.v.multiply(-1);
+        gameState.shipDestroyed();
     }
     if(this._test_collision(this.ship, this.target)) {
         this.target.collisionHandler(this.ship);
@@ -162,13 +194,19 @@ Simulation.prototype._draw_co = function(co) {
 }
 
 Simulation.prototype.draw = function() {
-    this.ship.draw();
-    this._draw_co(this.target);
-    this.start.draw();
+    if(gameState.tutorialMode === 0){
+        if(this.started) {
+            this.ship.draw();
+        } else {
+            this.start.draw();
+        }
+
+        this.target.draw();
+    }
 }
 
 Simulation.prototype._accellerateShip = function() {
-    dir = limitDistanceLength(this.start.pos, Mouse.pos, 300);
+    dir = limitDistanceLength(this.start.pos, Mouse.pos, 300, 150);
     this.ship.v = dir.multiply(2);
 }
 
@@ -179,9 +217,15 @@ Simulation.prototype._register_keys = function() {
     Keyboard.registerKeyUpHandler(Keyboard.H, () => this.gravity = 0);
 
     Mouse.left.registerUpCallback('shoot', () => {
-        if(!this.started) {
+        if(!this.started && gameState.tutorialMode === 0) {
             this.started = true;
             this._accellerateShip()
+        }
+        if(gameState.tutorialMode > 0) {
+            gameState.tutorialMode++;
+            if (gameState.tutorialMode >= 8) {
+                gameState.tutorialMode = 0;
+            }
         }
 
     });

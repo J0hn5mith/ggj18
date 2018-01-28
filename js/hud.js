@@ -2,6 +2,16 @@ function HUD(){};
 
 
 HUD.prototype.show = function(){
+    this.tutorialText = new Text({
+        size : 28,
+        font : "opensans",
+        align : "left",
+        color : "#fff",
+        appearCharPerSec : 20,
+        lineHeight: 40,
+        letterSpacing : 2.5,
+    });
+
     this.hudText = new Text({
         size : 30,
         font : "opensans",
@@ -9,20 +19,79 @@ HUD.prototype.show = function(){
         color : "#fff",
     });
 };
-HUD._draw_level_info = function(){};
-HUD.prototype._draw_lifes = function(){
+
+HUD.prototype._drawLevelInfo = function(){;
+
+};
+HUD.prototype._drawLevelInfo = function(){
+    this.hudText.drawPosText(
+        simulation.target.pos.x + 55,
+        simulation.target.pos.y + simulation.start.r + 45,
+        `Level ${gameState.levelCounter+1}`
+    );
+}
+
+HUD.prototype._drawLifes = function(){
     this.hudText.drawPosText(
         simulation.start.pos.x + 100,
         simulation.start.pos.y + simulation.start.r + 75,
-        `${gameState.lifes} vessels left`
+        `${gameState.lifes} vessels left`,
     );
 };
-HUD._draw_points = function(){};
 
-HUD.prototype.draw = function(){
-    c.globalAlpha=0.5;
-    //this._draw_level_info();
-    this._draw_lifes();
-    //this._draw_points();
-    c.globalAlpha=1;
+HUD.prototype._drawTutorial = function() {
+    if(gameState.tutorialMode === 1){
+        this.tutorialText.drawPosText(
+            simulation.start.pos.x -10,
+            simulation.start.pos.y + simulation.start.r + 75,
+            'On this planet the transmissoin starts...',
+        );
+    } else if (gameState.tutorialMode === 2) {
+        this.tutorialText.drawPosText(
+            simulation.target.pos.x,
+            simulation.target.pos.y + simulation.start.r + 75,
+            '... and here it ends.',
+        );
+    } else if (gameState.tutorialMode === 3) {
+        this.tutorialText.drawPosText(
+            simulation.co[0].pos.x - 300,
+            simulation.co[0].pos.y + simulation.start.r + 150,
+            'But be aware of the starts.\nThey will intercept the transmission.',
+        );
+    } else if (gameState.tutorialMode === 4) {
+        this.tutorialText.drawPosText(
+            1250,
+            100,
+            'The deep spce is dangerous as well.\nThransmisions get lost here quite fast.',
+        );
+    } else if (gameState.tutorialMode === 7) {
+        this.tutorialText.drawPosText(
+            simulation.co[0].pos.x - 300,
+            simulation.co[0].pos.y + simulation.start.r + 150,
+            'Suns are not only dangerous. They can help as well.\nBy pressing "R" you take advantage of the sun\'s \ngravity and you can bend the trajectory of your\ntransmission.',
+        );
+    } else if (gameState.tutorialMode === 6) {
+        this.tutorialText.drawPosText(
+            simulation.start.pos.x -20,
+            simulation.start.pos.y + simulation.start.r + 75,
+            'Pointing further away from the planet makes\nthe transmission travel faster.\nSo, let\'s get started...',
+        );
+    } else if(gameState.tutorialMode === 5){
+        this.tutorialText.drawPosText(
+            simulation.start.pos.x -20,
+            simulation.start.pos.y + simulation.start.r + 75,
+            'The mouse is used to direct and innitiate\nthe transmission.',
+        );
+    }
+};
+
+HUD.prototype.draw = function() {
+    if(gameState.tutorialMode === 0) {
+        c.globalAlpha=0.5;
+        this._drawLevelInfo();
+        this._drawLifes();
+        c.globalAlpha=1;
+    } else {
+        this._drawTutorial()
+    }
 };

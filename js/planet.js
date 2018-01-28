@@ -1,4 +1,4 @@
-function Planet(id, pos, r, type) {
+function Planet(id, pos, r, type, orbitRadius) {
 
     this.id = id;
 
@@ -12,7 +12,7 @@ function Planet(id, pos, r, type) {
 
     this.angle = 0;
 
-    this.orbitRadius = 500; // TODO
+    this.orbitRadius = orbitRadius;
 }
 
 
