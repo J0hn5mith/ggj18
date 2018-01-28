@@ -96,6 +96,10 @@ Space.prototype.update = function() {
             this.sunSecondaryGlareVisibility = 1.0;
             this.sunRise = 1.0;
             this.introFlip = 1.0;
+
+            Sound.setVolume("ingame_serious", 0);
+            Sound.play("ingame_serious", {loops: true});
+            Sound.fadeVolume ("ingame_serious", 0, 100, 2);
         } else {
             this.starsVisibility = Utils.scale0to1(this.intro, 5 / 81, 71 / 81);
             this.sunSecondaryGlareVisibility = Utils.scale0to1(this.intro, 5 / 81, 71 / 81);

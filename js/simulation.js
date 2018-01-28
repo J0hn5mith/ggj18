@@ -124,6 +124,8 @@ Simulation.prototype.show = function() {
     this._register_keys();
     this.start.show();
     this.target.show();
+    Sound.stop("ingame_fun");
+    Sound.fadeVolume ("ingame_serious", 20, 100, 2);
 };
 
 Simulation.prototype._updateConstraints = function(delta) {
@@ -208,6 +210,10 @@ Simulation.prototype.draw = function() {
 Simulation.prototype._accellerateShip = function() {
     dir = limitDistanceLength(this.start.pos, Mouse.pos, 300, 150);
     this.ship.v = dir.multiply(2);
+    Sound.fadeVolume ("ingame_serious", 10, 0, 1);
+    Sound.setVolume ("ingame_serious", 0);
+    Sound.play("ingame_fun");
+    Sound.fadeVolume ("ingame_fun", 20, 100, 2);
 }
 
 Simulation.prototype._register_keys = function() {

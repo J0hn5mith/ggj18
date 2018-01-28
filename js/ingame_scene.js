@@ -4,7 +4,7 @@ function GameState(){
     this.lifes = 3;
     this.levelCounter = 0;
 
-    this.tutorialMode = 0;
+    this.tutorialMode = 1;
 
     this.shaker = new Shaking();
 }
@@ -20,6 +20,7 @@ GameState.prototype.shipDestroyed = function() {
     this._checkGameState();
     this.shaker.shake(8, 20, 0);
 
+    Sound.fadeVolume ("ingame_fun", 100, 0, 2);
     IngameScene.restartLevel();
 };
 
@@ -48,6 +49,9 @@ IngameScene.show = function() {
 
     IngameScene.restartLevel()
 };
+
+IngameScene.introFinished = function() {
+}
 
 IngameScene._loadLevels = function() {
     IngameScene.levels = Levels();
