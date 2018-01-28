@@ -8,7 +8,7 @@ Settings.Game = function() {};
 Settings.Game.MAX_TIME_PER_FRAME = 0.1;
 Settings.Game.TIME_MULTIPLIER = 1.0;
 
-Settings.Game.DEBUG = true;
+Settings.Game.DEBUG = false;
 Settings.Game.PAUSE_ON_BLUR = false;
 
 Settings.Game.PREVENT_CONTEXT_MENU = true;
