@@ -19,5 +19,12 @@ Resources.pixelFonts = {
 
 
 Resources.sounds = {
-   // cannon : { source : ["audio/cannon.wav", "audio/cannon.mp3"], instances : 3 }
+    ingame_fun : {
+        source : ["audio/ingame_fun.ogg", "audio/ingame_fun.mp3"],
+        instances : 1
+    },
+    ingame_serious : {
+        source : ["audio/ingame_serious.ogg", "audio/ingame_serious.mp3"],
+        instances : 1
+    },
 };

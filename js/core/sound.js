@@ -33,6 +33,17 @@ Sound.setVolume = function(name, volume) { // volume : 0 - 100
     soundManager.setVolume(name + "_instance_" + position, volume);
 };
 
+Sound.fadeVolume = function(name, start, end, duration) { // volume : 0 - 100
+    var currentVolume = start;
+    var myInterval = setInterval(applyFading, 100);
+    function applyFading() {
+        currentVolume += (end - start)/(duration*100/10);
+        Sound.setVolume(name, currentVolume);
+        if (currentVolume > end){
+            clearInterval(myInterval);
+        }
+    }
+};
 
 Sound.muteUnmute = function() {
     if(Sound.muted) {
