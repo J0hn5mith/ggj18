@@ -4,11 +4,8 @@ function GraphicsTestScene() {}
 
 GraphicsTestScene.show = function() {
     space = new Space();
-    space.addBlackHole(new Vec2(700, 400), 50);
-    space.addSun(new Vec2(900, 500), 40);
-    space.addPlanet(new Vec2(1400, 200), 20, 1);
-    space.addPlanet(new Vec2(1600, 600), 35, 2);
-    GraphicsTestScene.tester = space.addPlanet(new Vec2(900, 500), 40, 0);
+    space.addSun(new Vec2(960, 400), 45);
+    space.addPlanet(new Vec2(960, 700), 55, 0);
 };
 
 
@@ -21,7 +18,7 @@ GraphicsTestScene.update = function() {
 
 
     if(!Game.paused) {
-        GraphicsTestScene.tester.setPos(Mouse.pos);
+        //GraphicsTestScene.tester.setPos(Mouse.pos);
         space.update();
     }
 };

@@ -2,15 +2,14 @@ function Resources() {}
 
 
 Resources.images = {
-    loading : "img/loading.png",
     background : "img/background.png",
     planets : "img/planets.png"
 };
 
 
 Resources.webFonts = [
-    "komika",
-    "opensans"
+    "opensans",
+    "geometria"
 ];
 
 
@@ -19,5 +18,5 @@ Resources.pixelFonts = {
 
 
 Resources.sounds = {
-   // cannon : { source : ["audio/cannon.wav", "audio/cannon.mp3"], instances : 3 }
+    intro : { source : ["audio/intro.mp3", "audio/intro.ogg"], instances : 1 }
 };

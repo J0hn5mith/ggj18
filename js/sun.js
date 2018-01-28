@@ -43,8 +43,8 @@ Sun.prototype.draw = function() {
 
     var gradient = c.createRadialGradient(this.pos.x, this.pos.y, this.r, this.pos.x, this.pos.y, this.r * 3);
     gradient.addColorStop(0.0, "rgba(255, 255, 255, 1.0)");
-    gradient.addColorStop(0.06, "rgba(254, 223, 139, 0.6)");
-    gradient.addColorStop(0.12, "rgba(214, 72, 63, 0.3)");
+    gradient.addColorStop(0.06, "rgba(254, 223, 139, " + (0.6 * space.sunSecondaryGlareVisibility) + ")");
+    gradient.addColorStop(0.12, "rgba(214, 72, 63, " + (0.3 * space.sunSecondaryGlareVisibility) + ")");
     gradient.addColorStop(1.0, "rgba(214, 72, 63, 0.0)");
 
     c.fillStyle = gradient;

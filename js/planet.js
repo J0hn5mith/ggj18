@@ -54,7 +54,7 @@ Planet.prototype.draw = function(lightingSun) {
         var showRadius = 53.5 * Interpolate.quadOut(lightingAngle);
         var centerExpansion = Interpolate.quadIn(Interpolate.quadIn(lightingAngle)) * 1600;
         var gradientCenter = normal.multiply(-showRadius - centerExpansion);
-        if(this.pos.x < lightingSun.pos.x) {
+        if(this.pos.x < lightingSun.pos.x || true) {
             gradient = c.createRadialGradient(gradientCenter.x, gradientCenter.y, 51 + centerExpansion, gradientCenter.x, gradientCenter.y, 55.5 + centerExpansion);
         } else {
             gradient = c.createRadialGradient(-gradientCenter.x, -gradientCenter.y, 55.5 + centerExpansion, -gradientCenter.x, -gradientCenter.y, 51 + centerExpansion);
@@ -64,7 +64,7 @@ Planet.prototype.draw = function(lightingSun) {
         gradient = c.createLinearGradient(normal.x * -2.5, normal.y * -2.5, normal.x * 2, normal.y * 2);
     }
 
-    gradient.addColorStop(0.0, "rgba(0, 0, 0, 0.85)");
+    gradient.addColorStop(0.0, "rgba(0, 0, 0, " + (1.0 - (0.15 * space.sunRise)) + ")");
     gradient.addColorStop(1.0, "rgba(0, 0, 0, 0.0)");
     c.fillStyle = gradient;
 
