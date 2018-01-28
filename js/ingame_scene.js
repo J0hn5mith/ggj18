@@ -3,6 +3,8 @@ function IngameScene() {}
 function GameState(){
     this.lifes = 3;
     this.levelCounter = 0;
+
+    this.shaker = new Shaking();
 }
 
 GameState.prototype.nextLevel = function() {
@@ -14,6 +16,7 @@ GameState.prototype.shipDestroyed = function() {
     simulation.puase = true;
     this.lifes--;
     this._checkGameState();
+    this.shaker.shake(8, 20, 0);
 
     IngameScene.restartLevel();
 }
@@ -85,9 +88,11 @@ IngameScene.draw = function() {
     c.fillRect(0, 0, Game.width, Game.height);
 
     // draw stuff here
+    gameState.shaker.apply();
     space.draw();
     simulation.draw()
     IngameScene.hud.draw();
+    gameState.shaker.remove();
 
     // draw pause screen when paused
     if(Game.paused) {

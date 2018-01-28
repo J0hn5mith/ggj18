@@ -9,7 +9,13 @@ HUD.prototype.show = function(){
         color : "#fff",
     });
 };
-HUD._draw_level_info = function(){};
+HUD.prototype._drawLevelInfo = function(){;
+    this.hudText.drawPosText(
+        simulation.target.pos.x + 55,
+        simulation.target.pos.y + simulation.start.r + 35,
+        `Level ${gameState.levelCounter+1}`
+    );
+}
 HUD.prototype._draw_lifes = function(){
     this.hudText.drawPosText(
         simulation.start.pos.x + 100,
@@ -21,7 +27,7 @@ HUD._draw_points = function(){};
 
 HUD.prototype.draw = function(){
     c.globalAlpha=0.5;
-    //this._draw_level_info();
+    this._drawLevelInfo();
     this._draw_lifes();
     //this._draw_points();
     c.globalAlpha=1;
