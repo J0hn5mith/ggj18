@@ -12,7 +12,7 @@ HUD.prototype.show = function(){
 HUD.prototype._drawLevelInfo = function(){;
     this.hudText.drawPosText(
         simulation.target.pos.x + 55,
-        simulation.target.pos.y + simulation.start.r + 35,
+        simulation.target.pos.y + simulation.start.r + 45,
         `Level ${gameState.levelCounter+1}`
     );
 }

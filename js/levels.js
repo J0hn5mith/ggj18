@@ -91,7 +91,7 @@ function Levels() {
     co2.orbitingObjects.push(oo3);
 
     const co3 = new CelestialObject(800, 400, 50, new Vec2(0,0), Colors.YELLOW_LIGHT);
-    const co4 = new CelestialObject(1000, 900, 50, new Vec2(0,0), Colors.YELLOW_LIGHT);
+    const co4 = new CelestialObject(1000, 900, 50, new Vec2(0,0), Colors.YELLOW_LIGHT, 1);
     oo1 = new OrbitingObject(co3, 20, 100, 3, Colors.YELLOW_DARK, collisionHandler);
 
     oo2 = new OrbitingObject(co3, 20, 200, -2, Colors.YELLOW_DARK, collisionHandler);
@@ -105,11 +105,12 @@ function Levels() {
     });
 
     return [
-        Level1(),
+        new Level(new Vec2(100, 500), [co3, co4], target),
         Level2(),
+        Level1(),
         Level4(),
         //new Level(new Vec2(100, 500), [co1], target),
         //new Level(new Vec2(200, 100), [co2], target),
-        new Level(new Vec2(100, 500), [co3, co4], target),
+        //new Level(new Vec2(100, 500), [co3, co4], target),
     ];
 }
