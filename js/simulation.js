@@ -194,13 +194,15 @@ Simulation.prototype._draw_co = function(co) {
 }
 
 Simulation.prototype.draw = function() {
-    if(this.started) {
-        this.ship.draw();
-    } else {
-        this.start.draw();
-    }
+    if(gameState.tutorialMode === 0){
+        if(this.started) {
+            this.ship.draw();
+        } else {
+            this.start.draw();
+        }
 
-    this.target.draw();
+        this.target.draw();
+    }
 }
 
 Simulation.prototype._accellerateShip = function() {
@@ -215,9 +217,15 @@ Simulation.prototype._register_keys = function() {
     Keyboard.registerKeyUpHandler(Keyboard.H, () => this.gravity = 0);
 
     Mouse.left.registerUpCallback('shoot', () => {
-        if(!this.started) {
+        if(!this.started && gameState.tutorialMode === 0) {
             this.started = true;
             this._accellerateShip()
+        }
+        if(gameState.tutorialMode > 0) {
+            gameState.tutorialMode++;
+            if (gameState.tutorialMode >= 8) {
+                gameState.tutorialMode = 0;
+            }
         }
 
     });

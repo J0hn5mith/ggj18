@@ -4,6 +4,8 @@ function GameState(){
     this.lifes = 3;
     this.levelCounter = 0;
 
+    this.tutorialMode = 0;
+
     this.shaker = new Shaking();
 }
 

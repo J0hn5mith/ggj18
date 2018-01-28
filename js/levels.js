@@ -105,10 +105,10 @@ function Levels() {
     });
 
     return [
-        new Level(new Vec2(100, 500), [co3, co4], target),
-        Level2(),
         Level1(),
+        Level2(),
         Level4(),
+        new Level(new Vec2(100, 500), [co3, co4], target),
         //new Level(new Vec2(100, 500), [co1], target),
         //new Level(new Vec2(200, 100), [co2], target),
         //new Level(new Vec2(100, 500), [co3, co4], target),
