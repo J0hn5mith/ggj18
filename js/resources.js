@@ -29,5 +29,6 @@ Resources.sounds = {
         source : ["audio/ingame_serious.ogg", "audio/ingame_serious.mp3"],
         instances : 1
     },
-    intro : { source : ["audio/intro.mp3", "audio/intro.ogg"], instances : 1 }
+    intro : { source : ["audio/intro.mp3", "audio/intro.ogg"], instances : 1 },
+    boom : { source : ["audio/boom.mp3", "audio/boom.ogg"], instances : 2 }
 };

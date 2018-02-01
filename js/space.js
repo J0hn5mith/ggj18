@@ -31,7 +31,7 @@ function Space() {
 
     this.reset();
 
-    Sound.play("intro", {});
+    Sound.play("intro", { volume : 100 });
 }
 
 
