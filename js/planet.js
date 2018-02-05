@@ -13,6 +13,8 @@ function Planet(id, pos, r, type, orbitRadius) {
     this.angle = 0;
 
     this.orbitRadius = orbitRadius;
+
+    this.isOld = false;
 }
 
 
@@ -28,20 +30,51 @@ Planet.prototype.setAngle = function(angle) {
 
 
 Planet.prototype.getPos = function() {
-    if(space.playingIntro) {
+    if(this.isOld) {
+        return this.getOldPos();
+    }
+    if(intro.playing) {
         var clone = this.pos.copy();
-        clone.x = Game.centerX + (Interpolate.quad(space.introFlip) * (this.pos.x - Game.centerX));
+        clone.x = Game.centerX + (Interpolate.quad(intro.cameraPan) * (this.pos.x - Game.centerX));
         return clone;
+
+    } else if(levelManager.currentLevelNumber > 0 && background.transAni < 1.0) {
+        var clone2 = this.pos.copy();
+        if(this.id > 0) {
+            clone2.x = (1.5 - background.transAni) * Game.width;
+            clone2.x += background.transAni * (this.pos.x - Game.centerX);
+            return clone2;
+        } else {
+            var lastTarget = levelManager.levels[levelManager.currentLevelNumber - 1].target.pos;
+            return lastTarget.add(clone2.subtract(lastTarget).multiply(background.transAni));
+        }
+
     } else {
         return this.pos;
     }
 };
 
 
-Planet.prototype.draw = function(lightingSun) {
+Planet.prototype.getOldPos = function() {
+    var clone = this.pos.copy();
+    clone.x = (0.5 - background.transAni) * Game.width;
+    clone.x += (1.0 - background.transAni) * (this.pos.x - Game.centerX);
+    return clone;
+};
+
+
+Planet.prototype.draw = function(lightingSun, oldSun, oldPlanet) {
     var pos = this.getPos();
 
     var toSun = lightingSun.getPos().subtract(pos);
+    if(oldSun !== null && oldPlanet !== null) {
+        var toOldSun = oldSun.getOldPos().subtract(oldPlanet.getOldPos());
+        toSun = toSun.multiply(background.transAni).add(toOldSun.multiply(1.0 - background.transAni));
+    }
+    if(this.isOld) {
+        toSun = oldPlanet.getOldPos().subtract(oldSun.getOldPos());
+    }
+
     var lightingAngle = Utils.limit(toSun.norm() / this.orbitRadius, 0, 1.0);
     var normal = toSun.normalize();
 
@@ -52,8 +85,15 @@ Planet.prototype.draw = function(lightingSun) {
     c.save();
     c.rotate(this.angle);
 
-    if(space.introFlip < 1.0 && this.id !== 0) {
-        c.globalAlpha = Utils.limit(space.introFlip * 3.0 - 1.0, 0.0, 1.0);
+    if(intro.cameraPan < 1.0 && this.id !== 0) {
+        c.globalAlpha = Utils.limit(intro.cameraPan * 3.0 - 1.0, 0.0, 1.0);
+    }
+    if(levelManager.currentLevelNumber > 0 && background.transAni < 1.0 && this.id > 0) {
+        if(this.isOld) {
+            c.globalAlpha = 1.0 - background.transAni;
+        } else {
+            c.globalAlpha = background.transAni;
+        }
     }
 
     var scaling = this.scale * Game.scaleX;
@@ -66,7 +106,10 @@ Planet.prototype.draw = function(lightingSun) {
     }
     c.restore();
 
-    if(space.introFlip < 1.0 && this.id !== 0) {
+    if(intro.cameraPan < 1.0 && this.id !== 0) {
+        c.globalAlpha = 1.0;
+    }
+    if(levelManager.currentLevelNumber > 0 && background.transAni < 1.0 && this.id > 0) {
         c.globalAlpha = 1.0;
     }
 
@@ -85,10 +128,10 @@ Planet.prototype.draw = function(lightingSun) {
         gradient = c.createLinearGradient(normal.x * -2.5, normal.y * -2.5, normal.x * 2, normal.y * 2);
     }
 
-    if(space.introFlip < 1.0 && this.id !== 0) {
-        gradient.addColorStop(0.0, "rgba(0, 0, 0, " + ((1.0 - (0.15 * space.sunRise)) * Utils.limit((space.introFlip * 4.5) - 1.5, 0.0, 1.0)) + ")");
+    if(intro.cameraPan < 1.0 && this.id !== 0) {
+        gradient.addColorStop(0.0, "rgba(0, 0, 0, " + ((1.0 - (0.15 * intro.sunRise)) * Utils.limit((intro.cameraPan * 4.5) - 1.5, 0.0, 1.0)) + ")");
     } else {
-        gradient.addColorStop(0.0, "rgba(0, 0, 0, " + (1.0 - (0.15 * space.sunRise)) + ")");
+        gradient.addColorStop(0.0, "rgba(0, 0, 0, " + (1.0 - (0.15 * intro.sunRise)) + ")");
     }
     gradient.addColorStop(1.0, "rgba(0, 0, 0, 0.0)");
     c.fillStyle = gradient;

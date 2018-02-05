@@ -40,16 +40,8 @@ Game.start = function() {
         Game.toggleFullScreen();
     });
 
-    Keyboard.registerKeyUpHandler(Keyboard.P, function() {
-        Game.pauseUnpause();
-    });
-
     Keyboard.registerKeyUpHandler(Keyboard.M, function() {
         Sound.muteUnmute();
-    });
-
-    Keyboard.registerKeyUpHandler(Keyboard.Q, function() {
-        ParticleSystem.particlesOn = !ParticleSystem.particlesOn;
     });
 
     if(Settings.Game.PAUSE_ON_BLUR) {

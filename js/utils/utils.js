@@ -176,12 +176,10 @@ Utils.drawCircle = function(c, x, y, radius) {
 };
 
 
-Utils.drawRing = function(c, x, y, radiusOuter, radiusInner, gap, rotation) {
-    gap = gap || 0.0001;
-    rotation = rotation || 0;
+Utils.drawRing = function(c, x, y, radiusOuter, radiusInner, start, end) {
     c.beginPath();
-    c.arc(x, y, radiusOuter,  Math.PI * rotation, (2 - gap + rotation) * Math.PI , false);
-    c.arc(x, y, radiusInner, (2 - gap + rotation) * Math.PI , (2 + rotation) * Math.PI, true);
+    c.arc(x, y, radiusOuter, start, end, false);
+    c.arc(x, y, radiusInner, end, start, true);
     c.closePath();
 };
 

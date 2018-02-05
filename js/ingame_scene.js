@@ -1,114 +1,63 @@
 function IngameScene() {}
 
-function GameState(){
-    this.lifes = 3;
-    this.levelCounter = 0;
-
-    this.tutorialMode = 1;
-
-    this.shaker = new Shaking();
-}
-
-GameState.prototype.nextLevel = function() {
-    this.levelCounter++;
-    IngameScene.restartLevel();
-};
-
-GameState.prototype.shipDestroyed = function() {
-    simulation.puase = true;
-    this.lifes--;
-    this._checkGameState();
-    this.shaker.shake(8, 20, 0);
-
-    Sound.fadeVolume ("ingame_fun", 50, 0, 2);
-    IngameScene.restartLevel();
-};
-
-GameState.prototype._checkGameState = function() {
-    if(this.lifes <= 0){
-        this.levelCounter = 0;
-        this.lifes = 3;
-        console.log('You loose');
-    }
-    if(this.level >= 3){
-        console.log('You Win');
-    }
-};
-
-IngameScene.levelCounter = 2;
 
 IngameScene.show = function() {
 
     gameState = new GameState();
+    levelManager = new LevelManager();
+    background = new SpaceBackground();
     space = new Space();
+    hud = new HUD();
+    intro = new Intro();
 
-    // do stuff before we update and draw this scene for the first time
-    IngameScene._loadLevels();
-    IngameScene.hud = new HUD();
-    IngameScene.hud.show();
+    levelManager.loadLevels();
+    levelManager.startLevel(false);
 
-    IngameScene.restartLevel()
-};
+    intro.start();
 
-IngameScene.introFinished = function() {
-}
+    Mouse.left.registerUpCallback("click", function() {
+        if(!intro.playing) {
+            if(hud.tutorialMode > 0 && hud.tutorialMode < 7) {
+                hud.flipTutorial();
 
-IngameScene._loadLevels = function() {
-    IngameScene.levels = Levels();
-};
-
-IngameScene.restartLevel = function() {
-    IngameScene.currentLevel = IngameScene.levels[gameState.levelCounter]
-    simulation = new Simulation(IngameScene.currentLevel);
-    simulation.show()
+            } else if(!simulation.shipFired && (hud.tutorialMode === 0 || hud.tutorialMode >= 7) && background.transAni > 0.9999) {
+                if(hud.tutorialMode === 7 || hud.tutorialMode === 11) {
+                    hud.flipTutorial();
+                }
+                simulation.fireShip();
+            }
+        }
+    });
 };
 
 
 IngameScene.hide = function() {
-
-    // do stuff before we draw and update the next scene
-};
-
-
-IngameScene.resize = function() {
-
-    // do stuff when window is resized
+    Mouse.left.deleteUpCallback("click");
 };
 
 
 IngameScene.update = function() {
-
-    // update stuff here
-
-    if(!Game.paused) {
-        if(!space.playingIntro) {
-            simulation.update(Timer.delta);
-        }
-        space.update();
-    }
+    simulation.update();
+    background.update();
+    intro.update();
 };
 
 
 IngameScene.draw = function() {
 
-    // clear scene
     c.fillStyle = "#000";
     c.fillRect(0, 0, Game.width, Game.height);
 
-    // draw stuff here
-    gameState.shaker.apply();
-    space.draw();
-    if(!space.playingIntro) {
-        simulation.draw();
-        IngameScene.hud.draw();
-    }
+    space.checkSunVisibility();
 
-    gameState.shaker.remove();
+    space.applyShaking();
 
-    // draw pause screen when paused
-    if(Game.paused) {
-        c.fillStyle = "rgba(0, 0, 0, 0.8)";
-        c.fillRect(0, 0, Game.width, Game.height);
-        Text.draw(Game.centerX, 100, 16, "opensans", "center", "#fff", "Paused - Press P to unpause");
-    }
+    background.draw();
+    space.drawHalosAndGlares();
+    background.drawStars();
+    space.drawObjects();
+    hud.draw();
+    intro.draw();
+
+    space.removeShaking();
 };

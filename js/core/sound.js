@@ -37,8 +37,8 @@ Sound.fadeVolume = function(name, start, end, duration) { // volume : 0 - 100
     var currentVolume = start;
     var myInterval = setInterval(applyFading, 100);
     function applyFading() {
-        currentVolume += (end - start)/(duration*100/10);
-        Sound.setVolume(name, currentVolume);
+        currentVolume += (end - start) / (duration * 10);
+        Sound.setVolume(name, Utils.limit(currentVolume, 0, 100));
         if (currentVolume > end){
             clearInterval(myInterval);
         }

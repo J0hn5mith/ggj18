@@ -5,6 +5,8 @@ function BlackHole(id, pos, r) {
     this.pos = new Vec2(pos.x, pos.y);
 
     this.r = r;
+
+    this.isOld = false;
 }
 
 
@@ -15,13 +17,30 @@ BlackHole.prototype.setPos = function(pos) {
 
 
 BlackHole.prototype.getPos = function() {
-    if(space.playingIntro) {
+    if(this.isOld) {
+        return this.getOldPos();
+    }
+    if(intro.playing) {
         var clone = this.pos.copy();
         clone.x = Game.centerX + (Interpolate.quad(space.introFlip) * (this.pos.x - Game.centerX));
         return clone;
+    } else if(levelManager.currentLevelNumber > 0 && background.transAni < 1.0) {
+        var clone2 = this.pos.copy();
+        clone2.x = (1.5 - background.transAni) * Game.width;
+        clone2.x += background.transAni * (this.pos.x - Game.centerX);
+        return clone2;
+
     } else {
         return this.pos;
     }
+};
+
+
+BlackHole.prototype.getOldPos = function() {
+    var clone = this.pos.copy();
+    clone.x = (0.5 - background.transAni) * Game.width;
+    clone.x += (1.0 - background.transAni) * (this.pos.x - Game.centerX);
+    return clone;
 };
 
 
@@ -93,7 +112,6 @@ BlackHole.prototype.drawHalo = function() {
 
 
 BlackHole.prototype.draw = function() {
-
     c.fillStyle = "#000";
     Utils.drawCircle(c, this.pos.x, this.pos.y, this.r);
     c.fill();

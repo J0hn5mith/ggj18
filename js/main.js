@@ -2,8 +2,13 @@ var canvas;
 var c;
 
 var gameState;
-var simulation;
+var levelManager;
+var background;
 var space;
+var hud;
+var intro;
+var simulation;
+
 
 jQuery(document).ready(function() {
 

@@ -1,8 +1,8 @@
-function SpaceShip(x, y, v, color) {
-    this.pos = new Vec2(x,y);
-    this.r = 20;
-    this.v = v;
-    this.color = color;
+function SpaceShip(pos) {
+
+    this.pos = pos.copy();
+    this.radius = 20;
+    this.v = new Vec2(0, 0);
     this.mass = 300;
 
     this.particleSystem = new ParticleSystem(1, {
@@ -29,6 +29,18 @@ function SpaceShip(x, y, v, color) {
     this.rightArmAni = Utils.randFloat(0, TWO_PI);
 }
 
+
+SpaceShip.prototype.getObjectRadius = function() {
+    return this.radius;
+};
+
+
+SpaceShip.prototype.isOutOfLevel = function() {
+    return this.pos.x < -this.radius || this.pos.x > Game.width + this.radius ||
+        this.pos.y < -this.radius || this.pos.y > Game.height + this.radius;
+};
+
+
 SpaceShip.prototype.draw = function() {
     this.particleSystem.setEmitter(this.pos);
     this.particleSystem.setV(
@@ -37,10 +49,6 @@ SpaceShip.prototype.draw = function() {
     this.particleSystem.draw();
     this.particleSystemTrain.setEmitter(this.pos);
     this.particleSystemTrain.draw();
-
-    c.fillStyle = this.color;
-    //Utils.drawCircle(c, this.pos.x, this.pos.y, this.r);
-    c.fill();
 
     this.bodyAni += Timer.delta * 2.3;
     this.leftArmAni += Timer.delta * 3.8;

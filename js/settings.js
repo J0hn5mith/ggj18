@@ -47,6 +47,6 @@ Settings.Loading.PIXEL_FONT_PERCENTAGE = 0;
 Settings.Loading.WEB_FONT_PERCENTAGE = 10;
 Settings.Loading.FAKE_PERCENTAGE = 40;
 
-Settings.Loading.FAKE_LOADING_TIME = 0.1;
+Settings.Loading.FAKE_LOADING_TIME = 3.1;
 
 Settings.Loading.TIME_BEFORE_SOUND_LOADING_FAIL = 5.0;
